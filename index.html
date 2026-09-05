@@ -1,0 +1,898 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>魔方墙图纸生成器</title>
+<style>
+  :root {
+    --bg: #14161a;
+    --panel: #1c1f26;
+    --line: #2c313b;
+    --text: #e7e9ee;
+    --muted: #99a0ae;
+    --accent: #6aa9ff;
+  }
+  * { box-sizing: border-box; }
+  body {
+    margin: 0;
+    font: 14px/1.5 -apple-system, "PingFang SC", "Microsoft YaHei", sans-serif;
+    background: var(--bg);
+    color: var(--text);
+  }
+  .app { display: grid; grid-template-columns: 320px 1fr; min-height: 100vh; }
+  .controls {
+    padding: 20px;
+    background: var(--panel);
+    border-right: 1px solid var(--line);
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+    overflow-y: auto;
+    max-height: 100vh;
+  }
+  .stage { padding: 24px; overflow: auto; }
+  h1 { font-size: 16px; margin: 0; letter-spacing: .5px; }
+  h2 { font-size: 12px; margin: 0 0 8px; color: var(--muted); font-weight: 600; letter-spacing: .08em; }
+  .group { border-top: 1px solid var(--line); padding-top: 16px; }
+  .group:first-of-type { border-top: none; padding-top: 0; }
+  label { display: block; font-size: 12px; color: var(--muted); margin-bottom: 4px; }
+  input[type="number"], select {
+    width: 100%;
+    padding: 7px 8px;
+    background: #12141a;
+    color: var(--text);
+    border: 1px solid var(--line);
+    border-radius: 6px;
+    font: inherit;
+  }
+  .row { display: flex; gap: 10px; }
+  .row > * { flex: 1; min-width: 0; }
+  .check { display: flex; align-items: center; gap: 8px; color: var(--text); font-size: 13px; }
+  .check input { accent-color: var(--accent); }
+  button {
+    padding: 8px 12px;
+    background: #262b34;
+    color: var(--text);
+    border: 1px solid var(--line);
+    border-radius: 6px;
+    font: inherit;
+    cursor: pointer;
+  }
+  button:hover { border-color: var(--accent); }
+  button.primary { background: var(--accent); color: #10131a; border-color: var(--accent); font-weight: 600; }
+  .drop {
+    border: 1px dashed var(--line);
+    border-radius: 8px;
+    padding: 20px 12px;
+    text-align: center;
+    color: var(--muted);
+    cursor: pointer;
+  }
+  .drop.over { border-color: var(--accent); color: var(--accent); }
+  .hint { font-size: 12px; color: var(--muted); }
+  .swatches { display: grid; grid-template-columns: repeat(3, 1fr); gap: 8px; }
+  .swatch {
+    position: relative;
+    border: 2px solid transparent;
+    border-radius: 6px;
+    padding: 6px 4px 4px;
+    background: #12141a;
+    cursor: pointer;
+    text-align: center;
+  }
+  .swatch.selected { border-color: var(--accent); }
+  .swatch .chip { height: 26px; border-radius: 4px; border: 1px solid rgba(255,255,255,.18); }
+  .swatch .name { font-size: 11px; color: var(--muted); margin-top: 4px; }
+  .swatch input[type="color"] {
+    display: block; width: 100%; height: 16px; margin-top: 4px; padding: 0;
+    background: none; border: 1px solid var(--line); border-radius: 3px; cursor: pointer;
+  }
+  .tools { display: grid; grid-template-columns: repeat(2, 1fr); gap: 6px; }
+  .tools button.active { background: var(--accent); color: #10131a; border-color: var(--accent); font-weight: 600; }
+  button:disabled { opacity: .4; cursor: default; }
+  button:disabled:hover { border-color: var(--line); }
+  .counts { display: grid; gap: 6px; }
+  .count-row { display: flex; align-items: center; gap: 8px; font-variant-numeric: tabular-nums; }
+  .count-row .chip { width: 16px; height: 16px; border-radius: 3px; border: 1px solid rgba(0,0,0,.35); }
+  .count-row .n { margin-left: auto; }
+  #canvasWrap { display: inline-block; background: #0e1014; padding: 12px; border-radius: 8px; border: 1px solid var(--line); }
+  canvas { display: block; max-width: 100%; height: auto; image-rendering: pixelated; cursor: crosshair; }
+  .empty { color: var(--muted); padding: 60px 0; text-align: center; }
+  .meta { color: var(--muted); font-size: 12px; margin-bottom: 12px; }
+  .warn { color: #ffb454; font-size: 12px; }
+  .sheet-title { display: none; }
+
+  @media print {
+    body { background: #fff; color: #000; }
+    .app { display: block; }
+    .controls { display: none; }
+    .stage { padding: 0; }
+    #canvasWrap { border: none; background: #fff; padding: 0; }
+    .sheet-title { display: block; font-size: 14px; margin-bottom: 8px; }
+    .meta { color: #333; }
+    .count-row { color: #000; }
+    .print-counts { display: grid; grid-template-columns: repeat(3, auto); gap: 4px 24px; margin-top: 12px; }
+  }
+</style>
+</head>
+<body>
+<div class="app">
+  <aside class="controls">
+    <h1>魔方墙图纸生成器</h1>
+
+    <div class="group">
+      <div class="drop" id="drop">
+        拖入图片，或点击选择<br><span class="hint">图片只在本机处理，不会上传</span>
+      </div>
+      <input type="file" id="file" accept="image/*" hidden>
+    </div>
+
+    <div class="group">
+      <h2>魔方类型</h2>
+      <div class="row">
+        <div>
+          <label for="order">阶数</label>
+          <select id="order">
+            <option value="2">2×2</option>
+            <option value="3" selected>3×3</option>
+            <option value="4">4×4</option>
+            <option value="5">5×5</option>
+            <option value="custom">自定义</option>
+          </select>
+        </div>
+        <div id="customWrap" style="display:none">
+          <label for="customOrder">N（2–7）</label>
+          <input type="number" id="customOrder" min="2" max="7" value="3">
+        </div>
+      </div>
+    </div>
+
+    <div class="group">
+      <h2>尺寸（贴纸）</h2>
+      <div class="row">
+        <div>
+          <label for="width">宽</label>
+          <input type="number" id="width" min="2" step="1" value="30">
+        </div>
+        <div>
+          <label for="height">高</label>
+          <input type="number" id="height" min="2" step="1" value="30">
+        </div>
+      </div>
+      <p class="hint" id="cubeInfo"></p>
+      <p class="warn" id="sizeWarn" hidden>单边超过 300 贴纸，渲染和打印会很吃力。</p>
+      <label for="fitMode" style="margin-top:10px">比例不符时</label>
+      <select id="fitMode">
+        <option value="cover">裁切（填满，切掉多余部分）</option>
+        <option value="contain" selected>补白（整图放进去，四周留边）</option>
+        <option value="match">按原图比例（自动改尺寸，不裁不留边）</option>
+      </select>
+      <div id="padWrap" style="margin-top:10px">
+        <label for="padColor">补白颜色</label>
+        <select id="padColor"></select>
+      </div>
+      <p class="hint" id="fitHint"></p>
+    </div>
+
+    <div class="group">
+      <h2>颜色（点上方色块选画笔，点下方细条改色值）</h2>
+      <div class="swatches" id="swatches"></div>
+      <button id="resetPalette" style="margin-top:10px">恢复标准配色</button>
+    </div>
+
+    <div class="group">
+      <h2>手动上色</h2>
+      <div class="tools" id="tools">
+        <button data-tool="brush" class="active">画笔</button>
+        <button data-tool="rect">矩形</button>
+        <button data-tool="fill">油漆桶</button>
+        <button data-tool="replace">同色全换</button>
+      </div>
+      <p class="hint" id="toolHint"></p>
+      <div class="row" style="margin-top:10px">
+        <button id="undo" disabled>撤销</button>
+        <button id="redo" disabled>重做</button>
+      </div>
+      <p class="hint">快捷键 ⌘Z 撤销、⌘⇧Z 重做。</p>
+    </div>
+
+    <div class="group">
+      <h2>抖动强度</h2>
+      <div class="row" style="align-items:center">
+        <input type="range" id="dither" min="0" max="100" step="5" value="0" style="flex:3">
+        <span id="ditherVal" style="flex:1;text-align:right;font-variant-numeric:tabular-nums">0%</span>
+      </div>
+      <p class="hint">0% = 纯色块，边界干净；越高层次越丰富但杂点越多。色块图建议 0%，照片 40–60%。</p>
+    </div>
+
+    <div class="group">
+      <div class="row">
+        <button class="primary" id="download">下载 PNG</button>
+        <button id="print">打印</button>
+      </div>
+    </div>
+  </aside>
+
+  <main class="stage">
+    <div class="sheet-title" id="sheetTitle"></div>
+    <div class="meta" id="meta">还没有图片。</div>
+    <div id="canvasWrap" hidden><canvas id="preview"></canvas></div>
+    <div class="empty" id="empty">拖入一张图片开始</div>
+    <div class="group" style="margin-top:20px;border:none;padding:0">
+      <h2>贴纸用量</h2>
+      <div class="counts print-counts" id="counts"></div>
+    </div>
+  </main>
+</div>
+
+<script type="module">
+/* ---------- 调色板 ---------- */
+const PALETTE_KEY = 'cubewall.palette.v1';
+const COLOR_NAMES = ['白', '黄', '蓝', '绿', '红', '橙'];
+const DEFAULT_COLORS = ['#FFFFFF', '#FFD500', '#0051BA', '#009E60', '#C41E3A', '#FF5800'];
+
+function loadPalette() {
+  try {
+    const raw = localStorage.getItem(PALETTE_KEY);
+    const parsed = raw && JSON.parse(raw);
+    const colors = parsed && parsed.colors;
+    if (Array.isArray(colors) && colors.length === 6 && colors.every(c => /^#[0-9a-f]{6}$/i.test(c))) {
+      return colors.slice();
+    }
+  } catch { /* 损坏或不可用时退回默认色 */ }
+  return DEFAULT_COLORS.slice();
+}
+
+function savePalette(colors) {
+  try { localStorage.setItem(PALETTE_KEY, JSON.stringify({ colors })); } catch { /* 隐私模式下仅本次会话生效 */ }
+}
+
+/* ---------- 颜色空间 ---------- */
+function hexToRgb(hex) {
+  const n = parseInt(hex.slice(1), 16);
+  return [(n >> 16) & 255, (n >> 8) & 255, n & 255];
+}
+
+const srgbToLinear = v => { v /= 255; return v <= 0.04045 ? v / 12.92 : ((v + 0.055) / 1.055) ** 2.4; };
+
+// 误差扩散在线性光空间进行：远看这面墙时，人眼平均的是光量而不是 sRGB 数值。
+function labFromLinear(R, G, B) {
+  const x = (R * 0.4124 + G * 0.3576 + B * 0.1805) / 0.95047;
+  const y = (R * 0.2126 + G * 0.7152 + B * 0.0722);
+  const z = (R * 0.0193 + G * 0.1192 + B * 0.9505) / 1.08883;
+  const k = v => v > 0.008856 ? Math.cbrt(v) : (7.787 * v + 16 / 116);
+  const [fx, fy, fz] = [k(x), k(y), k(z)];
+  return [116 * fy - 16, 500 * (fx - fy), 200 * (fy - fz)];
+}
+
+// 明度权重。1.5 是实测上限：再高会把暗橙也推成红色。
+const L_WEIGHT = 1.5;
+
+/* ---------- 状态 ---------- */
+const state = {
+  colors: loadPalette(),
+  order: 3,
+  cubesX: 10,
+  cubesY: 10,
+  sizeTouched: false,
+  fitMode: 'contain',
+  padColor: 0,
+  ditherStrength: 0,
+  brush: 0,
+  tool: 'brush',
+  image: null,
+  imageName: '',
+  grid: null,   // Uint8Array，长度 W*H，值为调色板下标
+};
+
+const gridW = () => state.cubesX * state.order;
+const gridH = () => state.cubesY * state.order;
+
+/* ---------- 量化 ---------- */
+// 把图片按「填满并居中裁切」画进 W×H，再逐像素贴到最近的魔方色。
+function quantize() {
+  const W = gridW(), H = gridH();
+  if (!state.image) { state.grid = null; return; }
+
+  const src = document.createElement('canvas');
+  src.width = W; src.height = H;
+  const sctx = src.getContext('2d', { willReadFrequently: true });
+  const contain = state.fitMode === 'contain';
+  // 透明像素要当白底看待，所以底色先铺满；补白模式则铺成用户选的边框色
+  sctx.fillStyle = contain ? state.colors[state.padColor] : '#fff';
+  sctx.fillRect(0, 0, W, H);
+
+  const iw = state.image.width, ih = state.image.height;
+  const scale = contain ? Math.min(W / iw, H / ih) : Math.max(W / iw, H / ih);
+  const dw = iw * scale, dh = ih * scale;
+  const ox = (W - dw) / 2, oy = (H - dh) / 2;
+  sctx.imageSmoothingQuality = 'high';
+  sctx.drawImage(state.image, ox, oy, dw, dh);
+
+  const data = sctx.getImageData(0, 0, W, H).data;
+  const linPalette = state.colors.map(c => hexToRgb(c).map(srgbToLinear));
+  const labs = linPalette.map(p => labFromLinear(p[0], p[1], p[2]));
+  const out = new Uint8Array(W * H);
+
+  // 全部在线性光空间累加误差
+  const buf = new Float32Array(W * H * 3);
+  for (let i = 0, p = 0; i < W * H; i++, p += 4) {
+    buf[i * 3] = srgbToLinear(data[p]);
+    buf[i * 3 + 1] = srgbToLinear(data[p + 1]);
+    buf[i * 3 + 2] = srgbToLinear(data[p + 2]);
+  }
+
+  const nearest = (R, G, B) => {
+    const lab = labFromLinear(R, G, B);
+    let best = 0, bestD = Infinity;
+    for (let k = 0; k < labs.length; k++) {
+      // 明度加权：六色里没有黑色，暗部按亮度就近（落到蓝）比按色相就近（落到红）更像原图
+      const dL = (lab[0] - labs[k][0]) * L_WEIGHT;
+      const d = dL * dL + (lab[1] - labs[k][1]) ** 2 + (lab[2] - labs[k][2]) ** 2;
+      if (d < bestD) { bestD = d; best = k; }
+    }
+    return best;
+  };
+
+  const strength = state.ditherStrength;
+  const spread = (x, y, er, eg, eb, factor) => {
+    if (x < 0 || x >= W || y < 0 || y >= H) return;
+    const i = (y * W + x) * 3;
+    const f = factor * strength;
+    // 截断累积误差，避免局部反差过大时误差滚雪球、把整片区域推成错误的颜色
+    buf[i] = Math.min(1.6, Math.max(-0.6, buf[i] + er * f));
+    buf[i + 1] = Math.min(1.6, Math.max(-0.6, buf[i + 1] + eg * f));
+    buf[i + 2] = Math.min(1.6, Math.max(-0.6, buf[i + 2] + eb * f));
+  };
+
+  for (let y = 0; y < H; y++) {
+    for (let x = 0; x < W; x++) {
+      const i = (y * W + x) * 3;
+      const R = Math.min(1, Math.max(0, buf[i]));
+      const G = Math.min(1, Math.max(0, buf[i + 1]));
+      const B = Math.min(1, Math.max(0, buf[i + 2]));
+      const k = nearest(R, G, B);
+      out[y * W + x] = k;
+      if (strength > 0) {
+        const [pr, pg, pb] = linPalette[k];
+        const er = R - pr, eg = G - pg, eb = B - pb;
+        spread(x + 1, y, er, eg, eb, 7 / 16);
+        spread(x - 1, y + 1, er, eg, eb, 3 / 16);
+        spread(x, y + 1, er, eg, eb, 5 / 16);
+        spread(x + 1, y + 1, er, eg, eb, 1 / 16);
+      }
+    }
+  }
+
+  // 补白区域直接写死成边框色。若任由抖动去量化这片纯色，误差扩散会在边上撒出杂点。
+  if (contain) {
+    const cx0 = Math.round(ox), cy0 = Math.round(oy);
+    const cx1 = Math.round(ox + dw) - 1, cy1 = Math.round(oy + dh) - 1;
+    for (let y = 0; y < H; y++) {
+      for (let x = 0; x < W; x++) {
+        if (x < cx0 || x > cx1 || y < cy0 || y > cy1) out[y * W + x] = state.padColor;
+      }
+    }
+  }
+  state.grid = out;
+}
+
+/* ---------- 绘制 ---------- */
+function columnLabel(index) {
+  let s = '';
+  let n = index;
+  do { s = String.fromCharCode(65 + (n % 26)) + s; n = Math.floor(n / 26) - 1; } while (n >= 0);
+  return s;
+}
+
+// 同一套绘制逻辑供预览与导出使用，只有 cell 大小不同。
+function drawGrid(ctx, cell) {
+  const W = gridW(), H = gridH(), N = state.order;
+  ctx.fillStyle = '#ffffff';
+  ctx.fillRect(0, 0, W * cell, H * cell);
+
+  for (let y = 0; y < H; y++) {
+    for (let x = 0; x < W; x++) {
+      ctx.fillStyle = state.colors[state.grid[y * W + x]];
+      ctx.fillRect(x * cell, y * cell, cell, cell);
+    }
+  }
+
+  // 细线：贴纸边界
+  ctx.strokeStyle = 'rgba(0,0,0,0.22)';
+  ctx.lineWidth = 1;
+  ctx.beginPath();
+  for (let x = 0; x <= W; x++) { ctx.moveTo(x * cell + .5, 0); ctx.lineTo(x * cell + .5, H * cell); }
+  for (let y = 0; y <= H; y++) { ctx.moveTo(0, y * cell + .5); ctx.lineTo(W * cell, y * cell + .5); }
+  ctx.stroke();
+
+  // 粗线：每 N 格一个魔方
+  const thick = Math.max(2, Math.round(cell / 6));
+  ctx.strokeStyle = '#111';
+  ctx.lineWidth = thick;
+  ctx.beginPath();
+  for (let cx = 0; cx <= state.cubesX; cx++) { ctx.moveTo(cx * N * cell, 0); ctx.lineTo(cx * N * cell, H * cell); }
+  for (let cy = 0; cy <= state.cubesY; cy++) { ctx.moveTo(0, cy * N * cell); ctx.lineTo(W * cell, cy * N * cell); }
+  ctx.stroke();
+
+  // 魔方编号：块太小就不画，避免糊成一团
+  const block = N * cell;
+  if (block >= 34) {
+    ctx.font = `${Math.max(9, Math.round(block / 5))}px -apple-system, sans-serif`;
+    ctx.textBaseline = 'top';
+    for (let cy = 0; cy < state.cubesY; cy++) {
+      for (let cx = 0; cx < state.cubesX; cx++) {
+        const label = `${cy + 1}-${columnLabel(cx)}`;
+        const px = cx * block + 3, py = cy * block + 2;
+        ctx.lineWidth = 3;
+        ctx.strokeStyle = 'rgba(255,255,255,0.85)';
+        ctx.strokeText(label, px, py);
+        ctx.fillStyle = '#111';
+        ctx.fillText(label, px, py);
+      }
+    }
+  }
+}
+
+const canvas = document.getElementById('preview');
+const ctx = canvas.getContext('2d');
+let previewCell = 16;
+
+function renderPreview() {
+  const W = gridW(), H = gridH();
+  document.getElementById('cubeInfo').textContent =
+    `${W} × ${H} 贴纸 = ${state.cubesX} × ${state.cubesY} 颗魔方（共 ${state.cubesX * state.cubesY} 颗）`;
+  document.getElementById('sizeWarn').hidden = Math.max(W, H) <= 300;
+
+  const hasGrid = !!state.grid;
+  document.getElementById('canvasWrap').hidden = !hasGrid;
+  document.getElementById('empty').hidden = hasGrid;
+  if (!hasGrid) { document.getElementById('counts').innerHTML = ''; return; }
+
+  previewCell = Math.max(6, Math.min(28, Math.floor(1000 / W)));
+  canvas.width = W * previewCell;
+  canvas.height = H * previewCell;
+  canvas.style.width = Math.min(canvas.width, 1000) + 'px';
+  repaint();
+
+  document.getElementById('meta').textContent =
+    `${state.imageName || '未命名'} · ${W}×${H} 贴纸 · ${state.order}×${state.order} 魔方 · 共 ${state.cubesX * state.cubesY} 颗`;
+  document.getElementById('sheetTitle').textContent = `魔方墙图纸 ${state.cubesX}×${state.cubesY} 颗（${state.order}阶）`;
+  renderCounts();
+}
+
+function renderCounts() {
+  const counts = new Array(6).fill(0);
+  for (const v of state.grid) counts[v]++;
+  document.getElementById('counts').innerHTML = COLOR_NAMES.map((name, i) => `
+    <div class="count-row">
+      <span class="chip" style="background:${state.colors[i]}"></span>
+      <span>${name}</span>
+      <span class="n">${counts[i]}</span>
+    </div>`).join('');
+  return counts;
+}
+
+/* ---------- 导出 ---------- */
+function buildSheet() {
+  const W = gridW(), H = gridH();
+  const cell = 24, pad = 28, legendH = 84;
+  const out = document.createElement('canvas');
+  out.width = W * cell + pad * 2;
+  out.height = H * cell + pad * 2 + legendH;
+  const c = out.getContext('2d');
+  c.fillStyle = '#fff';
+  c.fillRect(0, 0, out.width, out.height);
+
+  c.save();
+  c.translate(pad, pad);
+  drawGrid(c, cell);
+  c.restore();
+
+  const counts = new Array(6).fill(0);
+  for (const v of state.grid) counts[v]++;
+
+  c.fillStyle = '#111';
+  c.font = '16px -apple-system, "PingFang SC", sans-serif';
+  c.textBaseline = 'top';
+  const baseY = pad + H * cell + 14;
+  c.fillText(
+    `${W}×${H} 贴纸 · ${state.order}阶 · ${state.cubesX}×${state.cubesY} = ${state.cubesX * state.cubesY} 颗魔方` +
+    (state.imageName ? ` · ${state.imageName}` : ''),
+    pad, baseY
+  );
+
+  c.font = '14px -apple-system, "PingFang SC", sans-serif';
+  let x = pad;
+  for (let i = 0; i < 6; i++) {
+    c.fillStyle = state.colors[i];
+    c.fillRect(x, baseY + 30, 18, 18);
+    c.strokeStyle = '#666';
+    c.lineWidth = 1;
+    c.strokeRect(x + .5, baseY + 30.5, 18, 18);
+    c.fillStyle = '#111';
+    const text = `${COLOR_NAMES[i]} ${counts[i]}`;
+    c.fillText(text, x + 24, baseY + 32);
+    x += 24 + c.measureText(text).width + 22;
+  }
+  return out;
+}
+
+/* ---------- 交互 ---------- */
+function snapCubes(stickers) {
+  const N = state.order;
+  return Math.max(1, Math.round(stickers / N));
+}
+
+function syncSizeInputs() {
+  document.getElementById('width').value = gridW();
+  document.getElementById('height').value = gridH();
+  document.getElementById('width').step = state.order;
+  document.getElementById('height').step = state.order;
+  document.getElementById('width').min = state.order;
+  document.getElementById('height').min = state.order;
+}
+
+function refresh() {
+  quantize();
+  resetHistory();   // 重新量化会覆盖所有手工改动，旧的撤销记录对不上新网格
+  renderPreview();
+}
+
+function renderSwatches() {
+  document.getElementById('swatches').innerHTML = state.colors.map((c, i) => `
+    <div class="swatch ${i === state.brush ? 'selected' : ''}" data-i="${i}">
+      <div class="chip" style="background:${c}"></div>
+      <div class="name">${COLOR_NAMES[i]}</div>
+      <input type="color" value="${c}" data-color="${i}">
+    </div>`).join('');
+}
+
+document.getElementById('swatches').addEventListener('click', e => {
+  const sw = e.target.closest('.swatch');
+  if (!sw || e.target.matches('input[type="color"]')) return;
+  state.brush = Number(sw.dataset.i);
+  renderSwatches();
+});
+
+document.getElementById('swatches').addEventListener('input', e => {
+  const input = e.target.closest('input[type="color"]');
+  if (!input) return;
+  state.colors[Number(input.dataset.color)] = input.value.toUpperCase();
+  savePalette(state.colors);
+  renderSwatches();
+  refresh();
+});
+
+document.getElementById('resetPalette').addEventListener('click', () => {
+  state.colors = DEFAULT_COLORS.slice();
+  savePalette(state.colors);
+  renderSwatches();
+  refresh();
+});
+
+document.getElementById('order').addEventListener('change', e => {
+  const v = e.target.value;
+  const custom = v === 'custom';
+  document.getElementById('customWrap').style.display = custom ? '' : 'none';
+  state.order = custom ? clampOrder(document.getElementById('customOrder').value) : Number(v);
+  applyAspect('w');
+  syncSizeInputs();
+  refresh();
+});
+
+function clampOrder(v) {
+  return Math.min(7, Math.max(2, Math.round(Number(v) || 3)));
+}
+
+document.getElementById('customOrder').addEventListener('change', e => {
+  state.order = clampOrder(e.target.value);
+  e.target.value = state.order;
+  applyAspect('w');
+  syncSizeInputs();
+  refresh();
+});
+
+// 「按原图比例」下，另一边跟着算。anchor 指哪一边是用户刚定下、不该被改的。
+function applyAspect(anchor) {
+  if (state.fitMode !== 'match' || !state.image) return;
+  const { width: iw, height: ih } = state.image;
+  if (anchor === 'h') state.cubesX = snapCubes(gridH() * iw / ih);
+  else state.cubesY = snapCubes(gridW() * ih / iw);
+}
+
+function onSizeInput(which) {
+  return e => {
+    state.sizeTouched = true;
+    const cubes = snapCubes(Number(e.target.value));
+    if (which === 'w') state.cubesX = cubes; else state.cubesY = cubes;
+    applyAspect(which);
+    syncSizeInputs();
+    refresh();
+  };
+}
+document.getElementById('width').addEventListener('change', onSizeInput('w'));
+document.getElementById('height').addEventListener('change', onSizeInput('h'));
+
+const FIT_HINTS = {
+  cover: '图纸填满，原图超出的部分被切掉。',
+  contain: '整张图都放进来，比例不符的一侧留出边框。',
+  match: '高度跟着宽度自动算，既不裁切也不留边。',
+};
+
+document.getElementById('fitMode').addEventListener('change', e => {
+  state.fitMode = e.target.value;
+  document.getElementById('padWrap').style.display = state.fitMode === 'contain' ? '' : 'none';
+  document.getElementById('fitHint').textContent = FIT_HINTS[state.fitMode];
+  applyAspect('w');
+  syncSizeInputs();
+  refresh();
+});
+
+document.getElementById('padColor').addEventListener('change', e => {
+  state.padColor = Number(e.target.value);
+  refresh();
+});
+
+function renderPadOptions() {
+  document.getElementById('padColor').innerHTML =
+    COLOR_NAMES.map((n, i) => `<option value="${i}" ${i === state.padColor ? 'selected' : ''}>${n}</option>`).join('');
+}
+
+document.getElementById('dither').addEventListener('input', e => {
+  const pct = Number(e.target.value);
+  document.getElementById('ditherVal').textContent = pct + '%';
+  state.ditherStrength = pct / 100;
+  refresh();
+});
+
+/* ---------- 手动上色 ---------- */
+const TOOL_HINTS = {
+  brush: '按住拖动可连续涂抹单格。',
+  rect: '按住拖出一个矩形，松开后整块填充。',
+  fill: '填充与点击处相连的同色区域。',
+  replace: '把全图所有该颜色的格子一次换掉。',
+};
+
+// 撤销栈存整张网格的快照。网格是每格 1 字节，即使 300×300 也只有 90KB，
+// 比记录增量简单得多，也不怕漏记。
+const HISTORY_LIMIT = 60;
+const history = { undo: [], redo: [] };
+
+function resetHistory() {
+  history.undo.length = 0;
+  history.redo.length = 0;
+  syncHistoryButtons();
+}
+
+function pushHistory() {
+  history.undo.push(state.grid.slice());
+  if (history.undo.length > HISTORY_LIMIT) history.undo.shift();
+  history.redo.length = 0;
+  syncHistoryButtons();
+}
+
+function syncHistoryButtons() {
+  document.getElementById('undo').disabled = history.undo.length === 0;
+  document.getElementById('redo').disabled = history.redo.length === 0;
+}
+
+function stepHistory(from, to) {
+  if (!state.grid || from.length === 0) return;
+  to.push(state.grid.slice());
+  state.grid = from.pop();
+  syncHistoryButtons();
+  repaint();
+  renderCounts();
+}
+
+document.getElementById('undo').addEventListener('click', () => stepHistory(history.undo, history.redo));
+document.getElementById('redo').addEventListener('click', () => stepHistory(history.redo, history.undo));
+
+window.addEventListener('keydown', e => {
+  if (!(e.metaKey || e.ctrlKey) || e.key.toLowerCase() !== 'z') return;
+  e.preventDefault();
+  if (e.shiftKey) stepHistory(history.redo, history.undo);
+  else stepHistory(history.undo, history.redo);
+});
+
+document.getElementById('tools').addEventListener('click', e => {
+  const btn = e.target.closest('button[data-tool]');
+  if (!btn) return;
+  state.tool = btn.dataset.tool;
+  [...e.currentTarget.children].forEach(b => b.classList.toggle('active', b === btn));
+  document.getElementById('toolHint').textContent = TOOL_HINTS[state.tool];
+  canvas.style.cursor = state.tool === 'brush' ? 'crosshair' : 'cell';
+});
+
+// 相连同色区域：四邻域漫延，用显式栈避免大面积时递归爆栈
+function floodFill(sx, sy, to) {
+  const W = gridW(), H = gridH();
+  const from = state.grid[sy * W + sx];
+  if (from === to) return false;
+  const stack = [sy * W + sx];
+  while (stack.length) {
+    const i = stack.pop();
+    if (state.grid[i] !== from) continue;
+    state.grid[i] = to;
+    const x = i % W, y = (i - x) / W;
+    if (x > 0) stack.push(i - 1);
+    if (x < W - 1) stack.push(i + 1);
+    if (y > 0) stack.push(i - W);
+    if (y < H - 1) stack.push(i + W);
+  }
+  return true;
+}
+
+function replaceAll(sx, sy, to) {
+  const from = state.grid[sy * gridW() + sx];
+  if (from === to) return false;
+  for (let i = 0; i < state.grid.length; i++) if (state.grid[i] === from) state.grid[i] = to;
+  return true;
+}
+
+function fillRect(a, b, to) {
+  const W = gridW();
+  const x0 = Math.min(a.x, b.x), x1 = Math.max(a.x, b.x);
+  const y0 = Math.min(a.y, b.y), y1 = Math.max(a.y, b.y);
+  for (let y = y0; y <= y1; y++) for (let x = x0; x <= x1; x++) state.grid[y * W + x] = to;
+}
+
+// 指针事件是离散采样的，快速拖动时两次事件可能隔着好几格，直接补一条直线
+function paintLine(a, b) {
+  const W = gridW();
+  const steps = Math.max(Math.abs(b.x - a.x), Math.abs(b.y - a.y));
+  for (let s = 0; s <= steps; s++) {
+    const t = steps === 0 ? 0 : s / steps;
+    const x = Math.round(a.x + (b.x - a.x) * t);
+    const y = Math.round(a.y + (b.y - a.y) * t);
+    state.grid[y * W + x] = state.brush;
+  }
+}
+
+function cellAt(e) {
+  const r = canvas.getBoundingClientRect();
+  const scale = canvas.width / r.width;
+  const x = Math.floor((e.clientX - r.left) * scale / previewCell);
+  const y = Math.floor((e.clientY - r.top) * scale / previewCell);
+  if (x < 0 || y < 0 || x >= gridW() || y >= gridH()) return null;
+  return { x, y };
+}
+
+let drag = null;   // 矩形工具进行中的选区
+
+function repaint() {
+  if (!state.grid) return;
+  drawGrid(ctx, previewCell);
+  if (!drag || !drag.a) return;   // 画笔拖动没有选区，不画预览框
+  const x0 = Math.min(drag.a.x, drag.b.x), x1 = Math.max(drag.a.x, drag.b.x);
+  const y0 = Math.min(drag.a.y, drag.b.y), y1 = Math.max(drag.a.y, drag.b.y);
+  const px = x0 * previewCell, py = y0 * previewCell;
+  const pw = (x1 - x0 + 1) * previewCell, ph = (y1 - y0 + 1) * previewCell;
+  ctx.save();
+  ctx.globalAlpha = 0.55;
+  ctx.fillStyle = state.colors[state.brush];
+  ctx.fillRect(px, py, pw, ph);
+  ctx.restore();
+  ctx.lineWidth = 2;
+  ctx.setLineDash([6, 4]);
+  ctx.strokeStyle = '#111';
+  ctx.strokeRect(px + 1, py + 1, pw - 2, ph - 2);
+  ctx.setLineDash([]);
+}
+
+canvas.addEventListener('pointerdown', e => {
+  if (!state.grid) return;
+  const c = cellAt(e);
+  if (!c) return;
+  canvas.setPointerCapture(e.pointerId);
+  pushHistory();
+
+  if (state.tool === 'rect') {
+    drag = { a: c, b: c };
+    repaint();
+    return;
+  }
+  let changed;
+  if (state.tool === 'brush') {
+    drag = { brush: true, last: c };
+    changed = state.grid[c.y * gridW() + c.x] !== state.brush;
+    state.grid[c.y * gridW() + c.x] = state.brush;
+  } else if (state.tool === 'fill') {
+    changed = floodFill(c.x, c.y, state.brush);
+  } else {
+    changed = replaceAll(c.x, c.y, state.brush);
+  }
+  if (!changed) history.undo.pop();   // 点了但没改动，不该占一格撤销
+  syncHistoryButtons();
+  repaint();
+  renderCounts();
+});
+
+canvas.addEventListener('pointermove', e => {
+  if (!drag) return;
+  const c = cellAt(e);
+  if (!c) return;
+  if (drag.brush) {
+    paintLine(drag.last, c);   // 补上两次事件之间跳过的格子
+    drag.last = c;
+    repaint();
+    renderCounts();
+  } else {
+    drag.b = c;
+    repaint();
+  }
+});
+
+canvas.addEventListener('pointerup', () => {
+  if (!drag) return;
+  if (!drag.brush) {
+    const { a, b } = drag;
+    drag = null;
+    fillRect(a, b, state.brush);
+    renderCounts();
+  }
+  drag = null;
+  repaint();
+});
+
+/* ---------- 图片载入 ---------- */
+const drop = document.getElementById('drop');
+const fileInput = document.getElementById('file');
+
+drop.addEventListener('click', () => fileInput.click());
+drop.addEventListener('dragover', e => { e.preventDefault(); drop.classList.add('over'); });
+drop.addEventListener('dragleave', () => drop.classList.remove('over'));
+drop.addEventListener('drop', e => {
+  e.preventDefault();
+  drop.classList.remove('over');
+  handleFile(e.dataTransfer.files[0]);
+});
+fileInput.addEventListener('change', e => handleFile(e.target.files[0]));
+
+async function handleFile(file) {
+  if (!file) return;
+  if (!file.type.startsWith('image/')) { alert('请选择图片文件'); return; }
+  const url = URL.createObjectURL(file);
+  try {
+    const img = new Image();
+    img.src = url;
+    await img.decode();
+    state.image = img;
+    state.imageName = file.name;
+    applyAspect('w');
+    syncSizeInputs();
+    refresh();
+  } catch {
+    alert('这张图片无法读取，换一张试试');
+  } finally {
+    URL.revokeObjectURL(url);
+  }
+}
+
+/* ---------- 导出按钮 ---------- */
+document.getElementById('download').addEventListener('click', () => {
+  if (!state.grid) { alert('请先上传图片'); return; }
+  const sheet = buildSheet();
+  const a = document.createElement('a');
+  a.download = `cubewall-${gridW()}x${gridH()}-n${state.order}.png`;
+  a.href = sheet.toDataURL('image/png');
+  a.click();
+});
+
+document.getElementById('print').addEventListener('click', () => {
+  if (!state.grid) { alert('请先上传图片'); return; }
+  window.print();
+});
+
+/* ---------- 启动 ---------- */
+renderSwatches();
+renderPadOptions();
+syncSizeInputs();
+document.getElementById('toolHint').textContent = TOOL_HINTS[state.tool];
+document.getElementById('fitHint').textContent = FIT_HINTS[state.fitMode];
+renderPreview();
+</script>
+</body>
+</html>
