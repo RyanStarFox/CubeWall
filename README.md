@@ -1,28 +1,30 @@
-# 魔方墙图纸生成器
+English | [简体中文](README.zh-CN.md)
 
-上传一张图片，生成用魔方拼成一面墙的施工图纸。
+# Cube Wall Blueprint Generator
 
-图片只在浏览器里处理，不会上传到任何服务器。
+Upload an image and get a build blueprint for a wall made of Rubik's cubes.
 
-## 使用
+Everything runs in your browser. Your images are never uploaded anywhere.
 
-下载 `index.html`，双击用浏览器打开即可。没有构建步骤，不需要安装任何东西。
+![Example blueprint](Examples/clawds.png)
 
-## 功能
+## Getting started
 
-- **图片量化**：把图片转成魔方贴纸的六种颜色（白、黄、蓝、绿、红、橙）。
-- **魔方阶数**：2×2 / 3×3 / 4×4 / 5×5，也可自定义 N×N（N 取 2–7）。默认三阶。
-- **尺寸**：以贴纸数设定宽高，自动对齐到阶数的倍数，实时显示需要多少颗魔方。默认 30×30 贴纸，即 10×10 = 100 颗三阶魔方。
-- **比例不符时**：可选裁切、补白（边框颜色可选）或按原图比例自动改尺寸。默认补白。
-- **多图拼接**：一次可加多张图，用「铺满 / 横排 / 竖排 / 方阵」快速排列，也能在预览里直接拖动图层改位置、拉角改大小，支持重叠与层叠顺序。
-- **自定义裁切**：选中图层后用「取景」在框内拖动画面、滚轮缩放。裁切是可逆的——原图完整保留，随时能把切掉的部分拖回来。
-- **自定义配色**：六种颜色的色值都能改，浏览器会记住，随时可恢复标准配色。
-- **手动上色**：切到「上色」模式后，有画笔、矩形填充、油漆桶（填相连同色区域）、同色全换四种工具，支持撤销重做（⌘Z / ⌘⇧Z）。注意回到排版做任何改动都会重新量化，覆盖手工涂的格子。
-- **抖动**：0–100% 可调。0% 边界干净，适合色块图；照片想要层次可调到 40–60%。
-- **输出**：图纸带贴纸细线、魔方粗线分块和 `1-A` 式编号，附六色图例与各色贴纸用量，可下载 PNG 或直接打印。
+Download `index.html` and open it in a browser. No build step, nothing to install.
 
-## 说明
+## Features
 
-图纸只按格子上色，**不保证**每个 N×N 分块在一颗实体魔方上能真的拧出来——那需要考虑单颗魔方六个面的颜色守恒，是另一个量级的问题。实际拼装时通常是拆散魔方后按图纸贴回贴纸，或直接用现成的六色方块。
+- **Colour quantisation** — maps any image onto the six cube sticker colours (white, yellow, blue, green, red, orange).
+- **Cube size** — 2×2, 3×3, 4×4, 5×5, or a custom N×N with N from 2 to 7. Defaults to 3×3.
+- **Wall size** — set width and height in stickers; values snap to a multiple of the cube size, and the required cube count is shown live. Defaults to 30×30 stickers, i.e. 10×10 = 100 standard cubes.
+- **Aspect handling** — crop, pad (with your choice of border colour), or resize the wall to match the image. Defaults to padding.
+- **Multi-image collage** — add several images at once and lay them out with *Fill*, *Row*, *Column* or *Grid*, or drag layers freely in the preview, resize them by their corners, and overlap them in any stacking order.
+- **Non-destructive cropping** — select a layer, switch to *Framing*, then drag to pan and scroll to zoom. The original image is kept intact, so anything you crop away can always be brought back.
+- **Custom palette** — every one of the six colours can be edited. Your choices are remembered, and the standard palette is one click away.
+- **Manual painting** — switch to *Paint* mode for brush, rectangle fill, bucket fill (contiguous same-colour region) and global colour replace, with undo/redo (⌘Z / ⌘⇧Z). Note that any later layout change re-quantises the image and overwrites manual edits.
+- **Dithering** — adjustable from 0 to 100%. Use 0% for flat-colour artwork and clean edges; 40–60% brings out gradients in photographs.
+- **Output** — the blueprint shows thin sticker lines, bold cube boundaries and `1-A` style block labels, along with a colour legend and a per-colour sticker count. Download as PNG or print directly.
 
-`Examples/` 里是用这个工具生成的成品图纸。设计与实现决策记录在 `docs/superpowers/specs/`。
+## Notes
+
+`Examples/` contains finished blueprints produced with this tool. Design and implementation decisions are recorded in `docs/superpowers/specs/`.
