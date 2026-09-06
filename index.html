@@ -9,14 +9,80 @@
 <link rel="icon" type="image/png" sizes="16x16" href="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABAAAAAQCAYAAAAf8/9hAAACuElEQVR42lWTz2tUVxTHP+fe++a91zEzjJnUGCGTtEYjFCK4EkuhULrtwmVpu6iL4B/gwp3YVSnUQikt3fcXdFcEQbroRrBFEWqsJo72R5raiXkamZk3effe4yJJqx848OV7Vofv9wi75EyhuG3dgqLgefY/o22Av1YBBGC81bowY7P3EkRExPwx6rN3tsOL7TYAvd4GjzdWODgLEomVF27etV+trxenIefA0fHJ6mrnVb3SOaE3O6/p2X2H9erSr7rLL9e7+sW5XHUN1Vui2kVfP95Q2DfrUFwq0vfERqmqDiR1CVYM3lcAGBHyzFINBD8UTYxKXtMBBOcAFRHTFCepRppiJUVoNJs4lwDQaDbJUyXZqySiUEfEYkDUZXnG31slX9sezhgyMVze7NH79HOOvTIPwLUbXe5dq6hcShwKPgSW70OagmsNYWMq44P3D4MB8gR+THlHzjOXAxFowEfdt/n+27cg9AGh3v+QBks4yhJpZpiXJpCRR+sp6UzBGycMU0cNBGFmPDJ2aZrBgVnEF6irY9da8IDt3AUQaxEbwVowBg0RQoQgEJSoEFRgZ3SnEY4sIzwaEK6vgBHIHcNba/w05ThSB6KwvKTEf3/HJcsQBoAgww1IU1wB7NeMM9MnqeUpIoYf9lzkypd38JcEVLn9D9D4GXukB1UE75GVHiPAlWXJwUNzLC4u/lfUVqPJ/CffMd8xECNFDT5+eZrRm4fgyRDyGrUbq2Sr6zhANGqsvNfgK7XWMRwM2AxQVQJReBwUUwV4soX0K1UPqEYFcYAvy7KeOCeJcwKwFQKikLjtGA0QgkLu0OCExCI+1i14AWi3258tLCy8W6vVUFWzfLfL2OYak3u2T3o4gN/MCzA5BhAlRMyfxTePHhan5JkfnWEnVgDSCRj9v5xgk13DQHgA9wCeAv7jKkITlcTfAAAAAElFTkSuQmCC">
 <link rel="icon" type="image/png" sizes="32x32" href="data:image/png;base64,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">
 <link rel="apple-touch-icon" sizes="180x180" href="icons/icon-180.png">
+<script>
+(function () {
+  try {
+    var t = localStorage.getItem('cubewall.theme.v1');
+    if (t === 'light' || t === 'dark') document.documentElement.dataset.theme = t;
+  } catch (e) { /* 隐私模式：只跟系统 */ }
+})();
+</script>
 <style>
   :root {
+    color-scheme: dark;
     --bg: #14161a;
     --panel: #1c1f26;
     --line: #2c313b;
     --text: #e7e9ee;
     --muted: #99a0ae;
     --accent: #6aa9ff;
+    --on-accent: #10131a;
+    --input: #12141a;
+    --btn: #262b34;
+    --inset: #0c0e12;
+    --canvas-pad: #0e1014;
+    --chip-edge: rgba(255,255,255,.18);
+    --warn: #ffb454;
+  }
+  @media (prefers-color-scheme: light) {
+    :root {
+      color-scheme: light;
+      --bg: #f3f4f6;
+      --panel: #ffffff;
+      --line: #d5d9e0;
+      --text: #1a1d24;
+      --muted: #5c6470;
+      --accent: #2f7de1;
+      --on-accent: #ffffff;
+      --input: #f3f4f6;
+      --btn: #eef0f4;
+      --inset: #eceef2;
+      --canvas-pad: #e4e7ec;
+      --chip-edge: rgba(0,0,0,.12);
+      --warn: #b45309;
+    }
+  }
+  :root[data-theme="light"] {
+    color-scheme: light;
+    --bg: #f3f4f6;
+    --panel: #ffffff;
+    --line: #d5d9e0;
+    --text: #1a1d24;
+    --muted: #5c6470;
+    --accent: #2f7de1;
+    --on-accent: #ffffff;
+    --input: #f3f4f6;
+    --btn: #eef0f4;
+    --inset: #eceef2;
+    --canvas-pad: #e4e7ec;
+    --chip-edge: rgba(0,0,0,.12);
+    --warn: #b45309;
+  }
+  :root[data-theme="dark"] {
+    color-scheme: dark;
+    --bg: #14161a;
+    --panel: #1c1f26;
+    --line: #2c313b;
+    --text: #e7e9ee;
+    --muted: #99a0ae;
+    --accent: #6aa9ff;
+    --on-accent: #10131a;
+    --input: #12141a;
+    --btn: #262b34;
+    --inset: #0c0e12;
+    --canvas-pad: #0e1014;
+    --chip-edge: rgba(255,255,255,.18);
+    --warn: #ffb454;
   }
   * { box-sizing: border-box; }
   body {
@@ -37,6 +103,25 @@
     max-height: 100vh;
   }
   .stage { padding: 24px; overflow: auto; }
+  .brand { display: flex; flex-wrap: wrap; align-items: center; gap: 8px; }
+  .brand h1 { flex: 1; min-width: 0; }
+  .brand-tools { display: flex; gap: 8px; width: 100%; }
+  .lang {
+    display: flex; min-width: 0;
+    border: 1px solid var(--line); border-radius: 6px; overflow: hidden;
+  }
+  #langSwitch { flex: 2; }
+  #themeSwitch { flex: 3; }
+  .lang button {
+    flex: 1; min-width: 0; padding: 3px 4px; font-size: 11px; line-height: 1.3;
+    border: none; border-radius: 0; background: transparent; text-align: center;
+  }
+  .lang button.active { background: var(--accent); color: var(--on-accent); font-weight: 600; }
+  .brand .gh {
+    display: flex; align-items: center; justify-content: center;
+    color: var(--muted); flex-shrink: 0;
+  }
+  .brand .gh:hover { color: var(--accent); }
   h1 { font-size: 16px; margin: 0; letter-spacing: .5px; }
   h2 { font-size: 12px; margin: 0 0 8px; color: var(--muted); font-weight: 600; letter-spacing: .08em; }
   .group { border-top: 1px solid var(--line); padding-top: 16px; }
@@ -45,7 +130,7 @@
   input[type="number"], select {
     width: 100%;
     padding: 7px 8px;
-    background: #12141a;
+    background: var(--input);
     color: var(--text);
     border: 1px solid var(--line);
     border-radius: 6px;
@@ -57,7 +142,7 @@
   .check input { accent-color: var(--accent); }
   button {
     padding: 8px 12px;
-    background: #262b34;
+    background: var(--btn);
     color: var(--text);
     border: 1px solid var(--line);
     border-radius: 6px;
@@ -65,7 +150,7 @@
     cursor: pointer;
   }
   button:hover { border-color: var(--accent); }
-  button.primary { background: var(--accent); color: #10131a; border-color: var(--accent); font-weight: 600; }
+  button.primary { background: var(--accent); color: var(--on-accent); border-color: var(--accent); font-weight: 600; }
   .drop {
     border: 1px dashed var(--line);
     border-radius: 8px;
@@ -82,44 +167,70 @@
     border: 2px solid transparent;
     border-radius: 6px;
     padding: 6px 4px 4px;
-    background: #12141a;
+    background: var(--input);
     cursor: pointer;
     text-align: center;
   }
   .swatch.selected { border-color: var(--accent); }
-  .swatch .chip { height: 26px; border-radius: 4px; border: 1px solid rgba(255,255,255,.18); }
+  .swatch .chip { height: 26px; border-radius: 4px; border: 1px solid var(--chip-edge); }
   .swatch .name { font-size: 11px; color: var(--muted); margin-top: 4px; }
-  .swatch input[type="color"] {
-    display: block; width: 100%; height: 16px; margin-top: 4px; padding: 0;
-    background: none; border: 1px solid var(--line); border-radius: 3px; cursor: pointer;
+  .swatch .hex {
+    display: block; width: 100%; margin-top: 4px; padding: 2px 4px;
+    background: var(--inset); color: var(--text); border: 1px solid var(--line);
+    border-radius: 3px; font: 10px/1.4 ui-monospace, SFMono-Regular, Menlo, monospace;
+    text-align: center; letter-spacing: .02em;
+  }
+  .swatch .edit-color {
+    display: block; width: 100%; height: 22px; margin-top: 4px; padding: 0;
+    border: 1px solid var(--line); border-radius: 3px; cursor: pointer;
+  }
+  .picker {
+    position: fixed; z-index: 30; width: 200px; padding: 10px;
+    background: var(--panel); color: var(--text);
+    border: 1px solid var(--line); border-radius: 8px;
+    box-shadow: 0 10px 28px rgba(0,0,0,.28);
+  }
+  .picker[hidden] { display: none; }
+  .picker-sv {
+    display: block; width: 100%; height: 128px; border-radius: 4px;
+    cursor: crosshair; border: 1px solid var(--line);
+  }
+  .picker-hue {
+    -webkit-appearance: none; appearance: none;
+    width: 100%; height: 12px; margin: 10px 0 0; padding: 0;
+    border: 1px solid var(--line); border-radius: 6px;
+    background: linear-gradient(to right, #f00, #ff0, #0f0, #0ff, #00f, #f0f, #f00);
+  }
+  .picker-hue::-webkit-slider-thumb {
+    -webkit-appearance: none; width: 14px; height: 14px; border-radius: 50%;
+    background: var(--text); border: 2px solid var(--panel); cursor: pointer;
+  }
+  .picker-hue::-moz-range-thumb {
+    width: 14px; height: 14px; border-radius: 50%;
+    background: var(--text); border: 2px solid var(--panel); cursor: pointer;
   }
   .tools { display: grid; grid-template-columns: repeat(2, 1fr); gap: 6px; }
   .layer {
     display: flex; align-items: center; gap: 8px; padding: 6px;
     border: 1px solid var(--line); border-radius: 6px; margin-bottom: 6px;
-    background: #12141a; cursor: pointer;
+    background: var(--input); cursor: pointer;
   }
   .layer.selected { border-color: var(--accent); }
   .layer img { width: 30px; height: 30px; object-fit: cover; border-radius: 3px; background: #000; }
   .layer .lname { flex: 1; min-width: 0; font-size: 12px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
   .layer button { padding: 2px 6px; font-size: 12px; line-height: 1.2; }
-  .tools button.active { background: var(--accent); color: #10131a; border-color: var(--accent); font-weight: 600; }
+  .tools button.active { background: var(--accent); color: var(--on-accent); border-color: var(--accent); font-weight: 600; }
   button:disabled { opacity: .4; cursor: default; }
   button:disabled:hover { border-color: var(--line); }
-  .repo a {
-    display: flex; align-items: center; gap: 7px;
-    color: var(--muted); text-decoration: none; font-size: 12px;
-  }
-  .repo a:hover { color: var(--accent); }
   .counts { display: grid; gap: 6px; }
   .count-row { display: flex; align-items: center; gap: 8px; font-variant-numeric: tabular-nums; }
   .count-row .chip { width: 16px; height: 16px; border-radius: 3px; border: 1px solid rgba(0,0,0,.35); }
   .count-row .n { margin-left: auto; }
-  #canvasWrap { display: inline-block; background: #0e1014; padding: 12px; border-radius: 8px; border: 1px solid var(--line); }
+  #canvasWrap { display: inline-block; background: var(--canvas-pad); padding: 12px; border-radius: 8px; border: 1px solid var(--line); }
   canvas { display: block; max-width: 100%; height: auto; image-rendering: pixelated; cursor: crosshair; }
   .empty { color: var(--muted); padding: 60px 0; text-align: center; }
   .meta { color: var(--muted); font-size: 12px; margin-bottom: 12px; }
-  .warn { color: #ffb454; font-size: 12px; }
+  .warn { color: var(--warn); font-size: 12px; }
   .sheet-title { display: none; }
 
   @media print {
@@ -138,65 +249,82 @@
 <body>
 <div class="app">
   <aside class="controls">
-    <h1>魔方墙图纸生成器</h1>
+    <div class="brand">
+      <h1 data-i18n="title">魔方墙图纸生成器</h1>
+      <a class="gh" href="https://github.com/RyanStarFox/CubeWall" target="_blank" rel="noopener" data-i18n-title="github">
+        <svg viewBox="0 0 16 16" width="18" height="18" aria-hidden="true"><path fill="currentColor" d="M8 0C3.58 0 0 3.58 0 8c0 3.54 2.29 6.53 5.47 7.59.4.07.55-.17.55-.38 0-.19-.01-.82-.01-1.49-2.01.37-2.53-.49-2.69-.94-.09-.23-.48-.94-.82-1.13-.28-.15-.68-.52-.01-.53.63-.01 1.08.58 1.23.82.72 1.21 1.87.87 2.33.66.07-.52.28-.87.51-1.07-1.78-.2-3.64-.89-3.64-3.95 0-.87.31-1.59.82-2.15-.08-.2-.36-1.02.08-2.12 0 0 .67-.21 2.2.82.64-.18 1.32-.27 2-.27s1.36.09 2 .27c1.53-1.04 2.2-.82 2.2-.82.44 1.1.16 1.92.08 2.12.51.56.82 1.27.82 2.15 0 3.07-1.87 3.75-3.65 3.95.29.25.54.73.54 1.48 0 1.07-.01 1.93-.01 2.2 0 .21.15.46.55.38A8.01 8.01 0 0 0 16 8c0-4.42-3.58-8-8-8Z"/></svg>
+      </a>
+      <div class="brand-tools">
+        <div class="lang" id="langSwitch">
+          <button type="button" data-lang="zh" class="active">中</button>
+          <button type="button" data-lang="en">EN</button>
+        </div>
+        <div class="lang" id="themeSwitch">
+          <button type="button" data-theme="auto" class="active" data-i18n="themeAuto">自动</button>
+          <button type="button" data-theme="light" data-i18n="themeLight">浅色</button>
+          <button type="button" data-theme="dark" data-i18n="themeDark">深色</button>
+        </div>
+      </div>
+    </div>
 
     <div class="group">
       <div class="drop" id="drop">
-        拖入图片，或点击选择<br><span class="hint">可一次选多张，图片只在本机处理</span>
+        <span data-i18n="dropTitle">拖入图片，或点击选择</span><br>
+        <span class="hint" data-i18n="dropHint">可一次选多张，图片只在本机处理</span>
       </div>
       <input type="file" id="file" accept="image/*" multiple hidden>
     </div>
 
     <div class="group">
-      <h2>模式</h2>
+      <h2 data-i18n="mode">模式</h2>
       <div class="tools" id="modes">
-        <button data-mode="layout" class="active">排版</button>
-        <button data-mode="paint">上色</button>
+        <button data-mode="layout" class="active" data-i18n="layout">排版</button>
+        <button data-mode="paint" data-i18n="paint">上色</button>
       </div>
       <p class="hint" id="modeHint"></p>
     </div>
 
     <div class="group" id="layoutPanel">
-      <h2>图层</h2>
+      <h2 data-i18n="layers">图层</h2>
       <div id="layerList"></div>
-      <p class="hint" id="layerEmpty">还没有图片。</p>
+      <p class="hint" id="layerEmpty" data-i18n="layerEmpty">还没有图片。</p>
 
-      <h2 style="margin-top:14px">快速排列</h2>
+      <h2 style="margin-top:14px" data-i18n="arrange">快速排列</h2>
       <div class="tools">
-        <button data-arrange="full">铺满</button>
-        <button data-arrange="row">横排</button>
-        <button data-arrange="col">竖排</button>
-        <button data-arrange="grid">方阵</button>
+        <button data-arrange="full" data-i18n="full">铺满</button>
+        <button data-arrange="row" data-i18n="row">横排</button>
+        <button data-arrange="col" data-i18n="col">竖排</button>
+        <button data-arrange="grid" data-i18n="grid">方阵</button>
       </div>
 
-      <h2 style="margin-top:14px">画布操作</h2>
+      <h2 style="margin-top:14px" data-i18n="canvasOps">画布操作</h2>
       <div class="tools" id="layoutTools">
-        <button data-ltool="move" class="active">移动 / 缩放</button>
-        <button data-ltool="crop">取景</button>
+        <button data-ltool="move" class="active" data-i18n="move">移动 / 缩放</button>
+        <button data-ltool="crop" data-i18n="crop">取景</button>
       </div>
       <p class="hint" id="ltoolHint"></p>
       <div id="cropWrap" style="display:none">
-        <label for="zoom" style="margin-top:8px">取景缩放</label>
+        <label for="zoom" style="margin-top:8px" data-i18n="zoom">取景缩放</label>
         <div class="row" style="align-items:center">
           <input type="range" id="zoom" min="20" max="400" step="5" value="100" style="flex:3">
           <span id="zoomVal" style="flex:1;text-align:right;font-variant-numeric:tabular-nums">100%</span>
         </div>
-        <button id="resetCrop" style="margin-top:8px">重置取景</button>
-        <p class="hint">缩小到 100% 以下会露出补白色。裁掉的部分随时能拖回来，原图不会被破坏。</p>
+        <button id="resetCrop" style="margin-top:8px" data-i18n="resetCrop">重置取景</button>
+        <p class="hint" data-i18n="cropHint">缩小到 100% 以下会露出补白色。裁掉的部分随时能拖回来，原图不会被破坏。</p>
       </div>
     </div>
 
     <div class="group">
-      <h2>魔方类型</h2>
+      <h2 data-i18n="cubeType">魔方类型</h2>
       <div class="row">
         <div>
-          <label for="order">阶数</label>
+          <label for="order" data-i18n="order">阶数</label>
           <select id="order">
             <option value="2">2×2</option>
             <option value="3" selected>3×3</option>
             <option value="4">4×4</option>
             <option value="5">5×5</option>
-            <option value="custom">自定义</option>
+            <option value="custom" data-i18n="custom">自定义</option>
           </select>
         </div>
         <div id="customWrap" style="display:none">
@@ -207,94 +335,313 @@
     </div>
 
     <div class="group">
-      <h2>尺寸（贴纸）</h2>
+      <h2 data-i18n="size">尺寸（贴纸）</h2>
       <div class="row">
         <div>
-          <label for="width">宽</label>
+          <label for="width" data-i18n="width">宽</label>
           <input type="number" id="width" min="2" step="1" value="30">
         </div>
         <div>
-          <label for="height">高</label>
+          <label for="height" data-i18n="height">高</label>
           <input type="number" id="height" min="2" step="1" value="30">
         </div>
       </div>
       <p class="hint" id="cubeInfo"></p>
-      <p class="warn" id="sizeWarn" hidden>单边超过 300 贴纸，渲染和打印会很吃力。</p>
-      <label for="fitMode" style="margin-top:10px">比例不符时</label>
+      <p class="warn" id="sizeWarn" hidden data-i18n="sizeWarn">单边超过 300 贴纸，渲染和打印会很吃力。</p>
+      <label for="fitMode" style="margin-top:10px" data-i18n="fitMode">比例不符时</label>
       <select id="fitMode">
-        <option value="cover">裁切（填满，切掉多余部分）</option>
-        <option value="contain" selected>补白（整图放进去，四周留边）</option>
-        <option value="match">按原图比例（自动改尺寸，不裁不留边）</option>
+        <option value="cover" data-i18n="fitCover">裁切（填满，切掉多余部分）</option>
+        <option value="contain" selected data-i18n="fitContain">补白（整图放进去，四周留边）</option>
+        <option value="match" data-i18n="fitMatch">按原图比例（自动改尺寸，不裁不留边）</option>
       </select>
       <div id="padWrap" style="margin-top:10px">
-        <label for="padColor">补白颜色</label>
+        <label for="padColor" data-i18n="padColor">补白颜色</label>
         <select id="padColor"></select>
       </div>
       <p class="hint" id="fitHint"></p>
     </div>
 
     <div class="group">
-      <h2>颜色（点上方色块选画笔，点下方细条改色值）</h2>
+      <h2 data-i18n="colorsHelp">颜色</h2>
+      <p class="hint" data-i18n="colorsHint">点色块选画笔。色值和下面的色条可以改成你手上那套魔方的颜色，浏览器会记住。</p>
       <div class="swatches" id="swatches"></div>
-      <button id="resetPalette" style="margin-top:10px">恢复标准配色</button>
+      <button id="resetPalette" style="margin-top:10px" data-i18n="resetPalette">恢复标准配色</button>
     </div>
 
     <div class="group" id="paintPanel" style="display:none">
-      <h2>手动上色</h2>
+      <h2 data-i18n="paintManual">手动上色</h2>
       <div class="tools" id="tools">
-        <button data-tool="brush" class="active">画笔</button>
-        <button data-tool="rect">矩形</button>
-        <button data-tool="fill">油漆桶</button>
-        <button data-tool="replace">同色全换</button>
+        <button data-tool="brush" class="active" data-i18n="brush">画笔</button>
+        <button data-tool="rect" data-i18n="rect">矩形</button>
+        <button data-tool="fill" data-i18n="fill">油漆桶</button>
+        <button data-tool="replace" data-i18n="replace">同色全换</button>
       </div>
       <p class="hint" id="toolHint"></p>
       <div class="row" style="margin-top:10px">
-        <button id="undo" disabled>撤销</button>
-        <button id="redo" disabled>重做</button>
+        <button id="undo" disabled data-i18n="undo">撤销</button>
+        <button id="redo" disabled data-i18n="redo">重做</button>
       </div>
-      <p class="hint">快捷键 ⌘Z 撤销、⌘⇧Z 重做。</p>
+      <p class="hint" data-i18n="shortcuts">快捷键 ⌘Z 撤销、⌘⇧Z 重做。</p>
     </div>
 
     <div class="group">
-      <h2>抖动强度</h2>
+      <h2 data-i18n="dither">抖动强度</h2>
       <div class="row" style="align-items:center">
         <input type="range" id="dither" min="0" max="100" step="5" value="0" style="flex:3">
         <span id="ditherVal" style="flex:1;text-align:right;font-variant-numeric:tabular-nums">0%</span>
       </div>
-      <p class="hint">0% = 纯色块，边界干净；越高层次越丰富但杂点越多。色块图建议 0%，照片 40–60%。</p>
+      <p class="hint" data-i18n="ditherHint">0% = 纯色块，边界干净；越高层次越丰富但杂点越多。色块图建议 0%，照片 40–60%。</p>
     </div>
 
     <div class="group">
       <div class="row">
-        <button class="primary" id="download">下载 PNG</button>
-        <button id="print">打印</button>
+        <button class="primary" id="download" data-i18n="download">下载 PNG</button>
+        <button id="print" data-i18n="print">打印</button>
       </div>
-    </div>
-
-    <div class="group repo">
-      <a href="https://github.com/RyanStarFox/CubeWall" target="_blank" rel="noopener">
-        <svg viewBox="0 0 16 16" width="15" height="15" aria-hidden="true"><path fill="currentColor" d="M8 0C3.58 0 0 3.58 0 8c0 3.54 2.29 6.53 5.47 7.59.4.07.55-.17.55-.38 0-.19-.01-.82-.01-1.49-2.01.37-2.53-.49-2.69-.94-.09-.23-.48-.94-.82-1.13-.28-.15-.68-.52-.01-.53.63-.01 1.08.58 1.23.82.72 1.21 1.87.87 2.33.66.07-.52.28-.87.51-1.07-1.78-.2-3.64-.89-3.64-3.95 0-.87.31-1.59.82-2.15-.08-.2-.36-1.02.08-2.12 0 0 .67-.21 2.2.82.64-.18 1.32-.27 2-.27s1.36.09 2 .27c1.53-1.04 2.2-.82 2.2-.82.44 1.1.16 1.92.08 2.12.51.56.82 1.27.82 2.15 0 3.07-1.87 3.75-3.65 3.95.29.25.54.73.54 1.48 0 1.07-.01 1.93-.01 2.2 0 .21.15.46.55.38A8.01 8.01 0 0 0 16 8c0-4.42-3.58-8-8-8Z"/></svg>
-        在 GitHub 上查看源码
-      </a>
     </div>
   </aside>
 
   <main class="stage">
     <div class="sheet-title" id="sheetTitle"></div>
-    <div class="meta" id="meta">还没有图片。</div>
+    <div class="meta" id="meta" data-i18n="noImage">还没有图片。</div>
     <div id="canvasWrap" hidden><canvas id="preview"></canvas></div>
-    <div class="empty" id="empty">拖入一张图片开始</div>
+    <div class="empty" id="empty" data-i18n="empty">拖入一张图片开始</div>
     <div class="group" style="margin-top:20px;border:none;padding:0">
-      <h2>贴纸用量</h2>
+      <h2 data-i18n="stickerUsage">贴纸用量</h2>
       <div class="counts print-counts" id="counts"></div>
     </div>
   </main>
 </div>
 
+<div class="picker" id="picker" hidden>
+  <canvas class="picker-sv" id="pickerSV" width="180" height="128"></canvas>
+  <input class="picker-hue" id="pickerHue" type="range" min="0" max="360" value="0">
+</div>
+
 <script type="module">
+/* ---------- 双语 ---------- */
+const LANG_KEY = 'cubewall.lang.v1';
+const THEME_KEY = 'cubewall.theme.v1';
+const THEMES = ['auto', 'light', 'dark'];
+const I18N = {
+  zh: {
+    title: '魔方墙图纸生成器',
+    github: '在 GitHub 上查看源码',
+    themeAuto: '自动',
+    themeLight: '浅色',
+    themeDark: '深色',
+    dropTitle: '拖入图片，或点击选择',
+    dropHint: '可一次选多张，图片只在本机处理',
+    mode: '模式',
+    layout: '排版',
+    paint: '上色',
+    layers: '图层',
+    layerEmpty: '还没有图片。',
+    arrange: '快速排列',
+    full: '铺满',
+    row: '横排',
+    col: '竖排',
+    grid: '方阵',
+    canvasOps: '画布操作',
+    move: '移动 / 缩放',
+    crop: '取景',
+    zoom: '取景缩放',
+    resetCrop: '重置取景',
+    cropHint: '缩小到 100% 以下会露出补白色。裁掉的部分随时能拖回来，原图不会被破坏。',
+    cubeType: '魔方类型',
+    order: '阶数',
+    custom: '自定义',
+    size: '尺寸（贴纸）',
+    width: '宽',
+    height: '高',
+    sizeWarn: '单边超过 300 贴纸，渲染和打印会很吃力。',
+    fitMode: '比例不符时',
+    fitCover: '裁切（填满，切掉多余部分）',
+    fitContain: '补白（整图放进去，四周留边）',
+    fitMatch: '按原图比例（自动改尺寸，不裁不留边）',
+    padColor: '补白颜色',
+    colorsHelp: '颜色',
+    colorsHint: '点色块选画笔。色值和下面的色条可以改成你手上那套魔方的颜色，浏览器会记住。',
+    resetPalette: '恢复标准配色',
+    paintManual: '手动上色',
+    brush: '画笔',
+    rect: '矩形',
+    fill: '油漆桶',
+    replace: '同色全换',
+    undo: '撤销',
+    redo: '重做',
+    shortcuts: '快捷键 ⌘Z 撤销、⌘⇧Z 重做。',
+    dither: '抖动强度',
+    ditherHint: '0% = 纯色块，边界干净；越高层次越丰富但杂点越多。色块图建议 0%，照片 40–60%。',
+    download: '下载 PNG',
+    print: '打印',
+    stickerUsage: '贴纸用量',
+    noImage: '还没有图片。',
+    empty: '拖入一张图片开始',
+    colorList: '白,黄,蓝,绿,红,橙',
+    layerUp: '上移',
+    layerDown: '下移',
+    layerDel: '删除',
+    sourceCollage: '{n} 张图拼接',
+    cubeInfo: '{w} × {h} 贴纸 = {cx} × {cy} 颗魔方（共 {n} 颗）',
+    meta: '{src} · {w}×{h} 贴纸 · {order}×{order} 魔方 · 共 {n} 颗',
+    sheetTitle: '魔方墙图纸 {cx}×{cy} 颗（{order}阶）',
+    sheetLine: '{w}×{h} 贴纸 · {order}阶 · {cx}×{cy} = {n} 颗魔方',
+    'fitHint.cover': '图纸填满，原图超出的部分被切掉。',
+    'fitHint.contain': '整张图都放进来，比例不符的一侧留出边框。',
+    'fitHint.match': '高度跟着宽度自动算，既不裁切也不留边。',
+    'toolHint.brush': '按住拖动可连续涂抹单格。',
+    'toolHint.rect': '按住拖出一个矩形，松开后整块填充。',
+    'toolHint.fill': '填充与点击处相连的同色区域。',
+    'toolHint.replace': '把全图所有该颜色的格子一次换掉。',
+    'modeHint.layout': '摆放图片。任何改动都会重新量化，手工涂的格子会被覆盖。',
+    'modeHint.paint': '逐格修改颜色。切回排版会丢失这些改动。',
+    'ltoolHint.move': '拖动图层改位置，拖角上的方块改大小。',
+    'ltoolHint.crop': '在图层里拖动可平移画面，滚轮或滑块缩放。',
+    alertAddImage: '请先添加图片',
+    alertChooseImage: '请选择图片文件',
+    alertSkip: '「{name}」无法读取，已跳过',
+    alertUploadFirst: '请先上传图片',
+  },
+  en: {
+    title: 'Cube Wall Blueprint',
+    github: 'View source on GitHub',
+    themeAuto: 'Auto',
+    themeLight: 'Light',
+    themeDark: 'Dark',
+    dropTitle: 'Drop images here, or click to choose',
+    dropHint: 'Multiple files OK. Processed only on this device.',
+    mode: 'Mode',
+    layout: 'Layout',
+    paint: 'Paint',
+    layers: 'Layers',
+    layerEmpty: 'No images yet.',
+    arrange: 'Quick arrange',
+    full: 'Fill',
+    row: 'Row',
+    col: 'Column',
+    grid: 'Grid',
+    canvasOps: 'Canvas',
+    move: 'Move / Resize',
+    crop: 'Frame',
+    zoom: 'Frame zoom',
+    resetCrop: 'Reset frame',
+    cropHint: 'Zooming below 100% shows the pad colour. Cropping is reversible — the original stays intact.',
+    cubeType: 'Cube type',
+    order: 'Order',
+    custom: 'Custom',
+    size: 'Size (stickers)',
+    width: 'W',
+    height: 'H',
+    sizeWarn: 'Sides over 300 stickers will be slow to render and print.',
+    fitMode: 'If the aspect doesn’t match',
+    fitCover: 'Crop (fill, trim overflow)',
+    fitContain: 'Pad (fit whole image, add borders)',
+    fitMatch: 'Match image (resize wall, no crop or pad)',
+    padColor: 'Pad colour',
+    colorsHelp: 'Colours',
+    colorsHint: 'Click a swatch to pick the brush. Edit the hex or the strip to match your cubes; this browser remembers them.',
+    resetPalette: 'Reset standard colours',
+    paintManual: 'Paint',
+    brush: 'Brush',
+    rect: 'Rect',
+    fill: 'Bucket',
+    replace: 'Replace all',
+    undo: 'Undo',
+    redo: 'Redo',
+    shortcuts: 'Shortcuts: ⌘Z undo, ⌘⇧Z redo.',
+    dither: 'Dither',
+    ditherHint: '0% = flat blocks, clean edges. Higher values add detail but more noise. Use 0% for graphics, 40–60% for photos.',
+    download: 'Download PNG',
+    print: 'Print',
+    stickerUsage: 'Sticker counts',
+    noImage: 'No image yet.',
+    empty: 'Drop an image to start',
+    colorList: 'White,Yellow,Blue,Green,Red,Orange',
+    layerUp: 'Move up',
+    layerDown: 'Move down',
+    layerDel: 'Delete',
+    sourceCollage: '{n}-image collage',
+    cubeInfo: '{w} × {h} stickers = {cx} × {cy} cubes ({n} total)',
+    meta: '{src} · {w}×{h} stickers · {order}×{order} cubes · {n} total',
+    sheetTitle: 'Cube wall {cx}×{cy} cubes ({order}×{order})',
+    sheetLine: '{w}×{h} stickers · {order}×{order} · {cx}×{cy} = {n} cubes',
+    'fitHint.cover': 'The wall is filled; anything that overflows is cropped.',
+    'fitHint.contain': 'The whole image fits in; unmatched sides get a border.',
+    'fitHint.match': 'The other side follows the image ratio. No crop, no pad.',
+    'toolHint.brush': 'Drag to paint cells continuously.',
+    'toolHint.rect': 'Drag a rectangle; release to fill the block.',
+    'toolHint.fill': 'Fill the contiguous region of the same colour.',
+    'toolHint.replace': 'Replace every cell of that colour on the wall.',
+    'modeHint.layout': 'Arrange images. Any change re-quantises and overwrites painted cells.',
+    'modeHint.paint': 'Edit cells by hand. Switching back to Layout discards these edits.',
+    'ltoolHint.move': 'Drag a layer to move it; drag a corner handle to resize.',
+    'ltoolHint.crop': 'Drag inside a layer to pan; scroll or use the slider to zoom.',
+    alertAddImage: 'Add an image first',
+    alertChooseImage: 'Please choose image files',
+    alertSkip: 'Could not read “{name}”, skipped',
+    alertUploadFirst: 'Upload an image first',
+  },
+};
+
+function detectLang() {
+  try {
+    const saved = localStorage.getItem(LANG_KEY);
+    if (saved === 'zh' || saved === 'en') return saved;
+  } catch { /* 隐私模式：只看浏览器语言 */ }
+  return (navigator.language || '').toLowerCase().startsWith('zh') ? 'zh' : 'en';
+}
+
+let lang = detectLang();
+
+function t(key, vars) {
+  let s = I18N[lang]?.[key] ?? I18N.zh[key] ?? key;
+  if (vars) s = s.replace(/\{(\w+)\}/g, (_, k) => vars[k] ?? '');
+  return s;
+}
+
+const colorNames = () => t('colorList').split(',');
+
+function applyStaticLang() {
+  document.documentElement.lang = lang === 'zh' ? 'zh-CN' : 'en';
+  document.title = t('title');
+  document.querySelectorAll('[data-i18n]').forEach(el => { el.textContent = t(el.dataset.i18n); });
+  document.querySelectorAll('[data-i18n-title]').forEach(el => { el.title = t(el.dataset.i18nTitle); });
+  document.querySelectorAll('#langSwitch button').forEach(b => {
+    b.classList.toggle('active', b.dataset.lang === lang);
+  });
+  syncThemeButton();
+}
+
+function loadThemePref() {
+  try {
+    const saved = localStorage.getItem(THEME_KEY);
+    if (THEMES.includes(saved)) return saved;
+  } catch { /* 隐私模式：只跟系统 */ }
+  return 'auto';
+}
+
+let themePref = loadThemePref();
+
+function applyTheme() {
+  if (themePref === 'light' || themePref === 'dark') {
+    document.documentElement.dataset.theme = themePref;
+    try { localStorage.setItem(THEME_KEY, themePref); } catch { /* 隐私模式：仅本次会话 */ }
+  } else {
+    delete document.documentElement.dataset.theme;
+    try { localStorage.removeItem(THEME_KEY); } catch { /* 忽略 */ }
+  }
+  syncThemeButton();
+}
+
+function syncThemeButton() {
+  document.querySelectorAll('#themeSwitch [data-theme]').forEach(b => {
+    b.classList.toggle('active', b.dataset.theme === themePref);
+  });
+}
+
 /* ---------- 调色板 ---------- */
 const PALETTE_KEY = 'cubewall.palette.v1';
-const COLOR_NAMES = ['白', '黄', '蓝', '绿', '红', '橙'];
 const DEFAULT_COLORS = ['#FFFFFF', '#FFD500', '#0051BA', '#009E60', '#C41E3A', '#FF5800'];
 
 function loadPalette() {
@@ -317,6 +664,31 @@ function savePalette(colors) {
 function hexToRgb(hex) {
   const n = parseInt(hex.slice(1), 16);
   return [(n >> 16) & 255, (n >> 8) & 255, n & 255];
+}
+
+function rgbToHex(r, g, b) {
+  return `#${[r, g, b].map(v => v.toString(16).padStart(2, '0')).join('').toUpperCase()}`;
+}
+
+function rgbToHsv(r, g, b) {
+  r /= 255; g /= 255; b /= 255;
+  const max = Math.max(r, g, b), min = Math.min(r, g, b), d = max - min;
+  let h = 0;
+  if (d) {
+    if (max === r) h = ((g - b) / d + (g < b ? 6 : 0));
+    else if (max === g) h = (b - r) / d + 2;
+    else h = (r - g) / d + 4;
+    h *= 60;
+  }
+  return [h, max === 0 ? 0 : d / max, max];
+}
+
+function hsvToRgb(h, s, v) {
+  const f = n => {
+    const k = (n + h / 60) % 6;
+    return Math.round((v - v * s * Math.max(Math.min(k, 4 - k, 1), 0)) * 255);
+  };
+  return [f(5), f(3), f(1)];
 }
 
 const srgbToLinear = v => { v /= 255; return v <= 0.04045 ? v / 12.92 : ((v + 0.055) / 1.055) ** 2.4; };
@@ -376,7 +748,7 @@ function layerDrawRect(L) {
 function sourceLabel() {
   if (state.layers.length === 0) return '';
   if (state.layers.length === 1) return state.layers[0].name;
-  return `${state.layers.length} 张图拼接`;
+  return t('sourceCollage', { n: state.layers.length });
 }
 
 function newLayer(img, name) {
@@ -539,14 +911,19 @@ let previewCell = 16;
 
 function renderPreview() {
   const W = gridW(), H = gridH();
-  document.getElementById('cubeInfo').textContent =
-    `${W} × ${H} 贴纸 = ${state.cubesX} × ${state.cubesY} 颗魔方（共 ${state.cubesX * state.cubesY} 颗）`;
+  document.getElementById('cubeInfo').textContent = t('cubeInfo', {
+    w: W, h: H, cx: state.cubesX, cy: state.cubesY, n: state.cubesX * state.cubesY,
+  });
   document.getElementById('sizeWarn').hidden = Math.max(W, H) <= 300;
 
   const hasGrid = !!state.grid;
   document.getElementById('canvasWrap').hidden = !hasGrid;
   document.getElementById('empty').hidden = hasGrid;
-  if (!hasGrid) { document.getElementById('counts').innerHTML = ''; return; }
+  if (!hasGrid) {
+    document.getElementById('counts').innerHTML = '';
+    document.getElementById('meta').textContent = t('noImage');
+    return;
+  }
 
   previewCell = Math.max(6, Math.min(28, Math.floor(1000 / W)));
   canvas.width = W * previewCell;
@@ -554,16 +931,19 @@ function renderPreview() {
   canvas.style.width = Math.min(canvas.width, 1000) + 'px';
   repaint();
 
-  document.getElementById('meta').textContent =
-    `${sourceLabel()} · ${W}×${H} 贴纸 · ${state.order}×${state.order} 魔方 · 共 ${state.cubesX * state.cubesY} 颗`;
-  document.getElementById('sheetTitle').textContent = `魔方墙图纸 ${state.cubesX}×${state.cubesY} 颗（${state.order}阶）`;
+  document.getElementById('meta').textContent = t('meta', {
+    src: sourceLabel() || t('noImage'), w: W, h: H, order: state.order, n: state.cubesX * state.cubesY,
+  });
+  document.getElementById('sheetTitle').textContent = t('sheetTitle', {
+    cx: state.cubesX, cy: state.cubesY, order: state.order,
+  });
   renderCounts();
 }
 
 function renderCounts() {
   const counts = new Array(6).fill(0);
   for (const v of state.grid) counts[v]++;
-  document.getElementById('counts').innerHTML = COLOR_NAMES.map((name, i) => `
+  document.getElementById('counts').innerHTML = colorNames().map((name, i) => `
     <div class="count-row">
       <span class="chip" style="background:${state.colors[i]}"></span>
       <span>${name}</span>
@@ -596,7 +976,7 @@ function buildSheet() {
   c.textBaseline = 'top';
   const baseY = pad + H * cell + 14;
   c.fillText(
-    `${W}×${H} 贴纸 · ${state.order}阶 · ${state.cubesX}×${state.cubesY} = ${state.cubesX * state.cubesY} 颗魔方` +
+    t('sheetLine', { w: W, h: H, order: state.order, cx: state.cubesX, cy: state.cubesY, n: state.cubesX * state.cubesY }) +
     (sourceLabel() ? ` · ${sourceLabel()}` : ''),
     pad, baseY
   );
@@ -610,7 +990,7 @@ function buildSheet() {
     c.lineWidth = 1;
     c.strokeRect(x + .5, baseY + 30.5, 18, 18);
     c.fillStyle = '#111';
-    const text = `${COLOR_NAMES[i]} ${counts[i]}`;
+    const text = `${colorNames()[i]} ${counts[i]}`;
     c.fillText(text, x + 24, baseY + 32);
     x += 24 + c.measureText(text).width + 22;
   }
@@ -661,28 +1041,155 @@ function renderSwatches() {
   document.getElementById('swatches').innerHTML = state.colors.map((c, i) => `
     <div class="swatch ${i === state.brush ? 'selected' : ''}" data-i="${i}">
       <div class="chip" style="background:${c}"></div>
-      <div class="name">${COLOR_NAMES[i]}</div>
-      <input type="color" value="${c}" data-color="${i}">
+      <div class="name">${colorNames()[i]}</div>
+      <input class="hex" type="text" spellcheck="false" maxlength="7" value="${c}" data-color="${i}" aria-label="${colorNames()[i]}">
+      <button type="button" class="edit-color" data-color="${i}" style="background:${c}" aria-label="${colorNames()[i]}"></button>
     </div>`).join('');
 }
 
-document.getElementById('swatches').addEventListener('click', e => {
-  const sw = e.target.closest('.swatch');
-  if (!sw || e.target.matches('input[type="color"]')) return;
-  state.brush = Number(sw.dataset.i);
-  renderSwatches();
+function paintSwatch(i, hex) {
+  const sw = document.querySelector(`.swatch[data-i="${i}"]`);
+  if (!sw) return;
+  sw.querySelector('.chip').style.background = hex;
+  sw.querySelector('.hex').value = hex;
+  sw.querySelector('.edit-color').style.background = hex;
+}
+
+function setColor(i, hex, commit = true) {
+  state.colors[i] = hex;
+  paintSwatch(i, hex);
+  if (!commit) return;
+  savePalette(state.colors);
+  refresh();
+}
+
+function parseHex(raw) {
+  const s = raw.trim();
+  if (/^#[0-9a-fA-F]{6}$/.test(s)) return s.toUpperCase();
+  if (/^[0-9a-fA-F]{6}$/.test(s)) return `#${s.toUpperCase()}`;
+  return null;
+}
+
+const pickerEl = document.getElementById('picker');
+const pickerSV = document.getElementById('pickerSV');
+const pickerHue = document.getElementById('pickerHue');
+const picker = { i: 0, h: 0, s: 1, v: 1, live: false };
+
+function hsvHex() {
+  return rgbToHex(...hsvToRgb(picker.h, picker.s, picker.v));
+}
+
+function drawSV() {
+  const ctx = pickerSV.getContext('2d');
+  const w = pickerSV.width, h = pickerSV.height;
+  const [r, g, b] = hsvToRgb(picker.h, 1, 1);
+  ctx.fillStyle = `rgb(${r},${g},${b})`;
+  ctx.fillRect(0, 0, w, h);
+  const gw = ctx.createLinearGradient(0, 0, w, 0);
+  gw.addColorStop(0, '#fff');
+  gw.addColorStop(1, 'rgba(255,255,255,0)');
+  ctx.fillStyle = gw;
+  ctx.fillRect(0, 0, w, h);
+  const gb = ctx.createLinearGradient(0, 0, 0, h);
+  gb.addColorStop(0, 'rgba(0,0,0,0)');
+  gb.addColorStop(1, '#000');
+  ctx.fillStyle = gb;
+  ctx.fillRect(0, 0, w, h);
+  const x = picker.s * (w - 1), y = (1 - picker.v) * (h - 1);
+  ctx.beginPath();
+  ctx.arc(x, y, 6, 0, Math.PI * 2);
+  ctx.strokeStyle = '#fff';
+  ctx.lineWidth = 2;
+  ctx.stroke();
+  ctx.beginPath();
+  ctx.arc(x, y, 7, 0, Math.PI * 2);
+  ctx.strokeStyle = '#111';
+  ctx.lineWidth = 1;
+  ctx.stroke();
+}
+
+function placePicker(anchor) {
+  const r = anchor.getBoundingClientRect();
+  const pw = pickerEl.offsetWidth || 200, ph = pickerEl.offsetHeight || 180;
+  let left = r.right + 8, top = r.top;
+  if (left + pw > window.innerWidth - 8) left = Math.max(8, r.left - pw - 8);
+  if (top + ph > window.innerHeight - 8) top = Math.max(8, window.innerHeight - ph - 8);
+  pickerEl.style.left = left + 'px';
+  pickerEl.style.top = top + 'px';
+}
+
+function openPicker(i, anchor) {
+  picker.i = i;
+  [picker.h, picker.s, picker.v] = rgbToHsv(...hexToRgb(state.colors[i]));
+  pickerHue.value = String(Math.round(picker.h));
+  pickerEl.hidden = false;
+  drawSV();
+  placePicker(anchor);
+}
+
+function closePicker() {
+  if (pickerEl.hidden) return;
+  pickerEl.hidden = true;
+  if (picker.live) {
+    picker.live = false;
+    savePalette(state.colors);
+    refresh();
+  }
+}
+
+function pickFromSV(e) {
+  const r = pickerSV.getBoundingClientRect();
+  picker.s = Math.min(1, Math.max(0, (e.clientX - r.left) / r.width));
+  picker.v = Math.min(1, Math.max(0, 1 - (e.clientY - r.top) / r.height));
+  picker.live = true;
+  setColor(picker.i, hsvHex(), false);
+  drawSV();
+}
+
+pickerSV.addEventListener('pointerdown', e => {
+  pickerSV.setPointerCapture(e.pointerId);
+  pickFromSV(e);
+});
+pickerSV.addEventListener('pointermove', e => {
+  if (!pickerSV.hasPointerCapture(e.pointerId)) return;
+  pickFromSV(e);
+});
+pickerHue.addEventListener('input', () => {
+  picker.h = Number(pickerHue.value);
+  picker.live = true;
+  setColor(picker.i, hsvHex(), false);
+  drawSV();
 });
 
-document.getElementById('swatches').addEventListener('input', e => {
-  const input = e.target.closest('input[type="color"]');
-  if (!input) return;
-  state.colors[Number(input.dataset.color)] = input.value.toUpperCase();
-  savePalette(state.colors);
-  renderSwatches();
-  refresh();
+document.getElementById('swatches').addEventListener('click', e => {
+  const sw = e.target.closest('.swatch');
+  if (!sw || e.target.matches('input')) return;
+  const edit = e.target.closest('.edit-color');
+  state.brush = Number(sw.dataset.i);
+  document.querySelectorAll('.swatch').forEach(el => el.classList.toggle('selected', el === sw));
+  if (edit) openPicker(state.brush, edit);
+  else closePicker();
+});
+
+document.getElementById('swatches').addEventListener('change', e => {
+  const hex = e.target.closest('input.hex');
+  if (!hex) return;
+  const parsed = parseHex(hex.value);
+  if (!parsed) { hex.value = state.colors[Number(hex.dataset.color)]; return; }
+  setColor(Number(hex.dataset.color), parsed);
+});
+
+document.addEventListener('pointerdown', e => {
+  if (pickerEl.hidden) return;
+  if (pickerEl.contains(e.target) || e.target.closest('.edit-color')) return;
+  closePicker();
+});
+window.addEventListener('keydown', e => {
+  if (e.key === 'Escape') closePicker();
 });
 
 document.getElementById('resetPalette').addEventListener('click', () => {
+  closePicker();
   state.colors = DEFAULT_COLORS.slice();
   savePalette(state.colors);
   renderSwatches();
@@ -739,16 +1246,10 @@ function onSizeInput(which) {
 document.getElementById('width').addEventListener('change', onSizeInput('w'));
 document.getElementById('height').addEventListener('change', onSizeInput('h'));
 
-const FIT_HINTS = {
-  cover: '图纸填满，原图超出的部分被切掉。',
-  contain: '整张图都放进来，比例不符的一侧留出边框。',
-  match: '高度跟着宽度自动算，既不裁切也不留边。',
-};
-
 document.getElementById('fitMode').addEventListener('change', e => {
   state.fitMode = e.target.value;
   document.getElementById('padWrap').style.display = state.fitMode === 'contain' ? '' : 'none';
-  document.getElementById('fitHint').textContent = FIT_HINTS[state.fitMode];
+  document.getElementById('fitHint').textContent = t('fitHint.' + state.fitMode);
   resizeWall(() => applyAspect('w'));
   syncSizeInputs();
   refresh();
@@ -761,7 +1262,7 @@ document.getElementById('padColor').addEventListener('change', e => {
 
 function renderPadOptions() {
   document.getElementById('padColor').innerHTML =
-    COLOR_NAMES.map((n, i) => `<option value="${i}" ${i === state.padColor ? 'selected' : ''}>${n}</option>`).join('');
+    colorNames().map((n, i) => `<option value="${i}" ${i === state.padColor ? 'selected' : ''}>${n}</option>`).join('');
 }
 
 document.getElementById('dither').addEventListener('input', e => {
@@ -772,13 +1273,6 @@ document.getElementById('dither').addEventListener('input', e => {
 });
 
 /* ---------- 手动上色 ---------- */
-const TOOL_HINTS = {
-  brush: '按住拖动可连续涂抹单格。',
-  rect: '按住拖出一个矩形，松开后整块填充。',
-  fill: '填充与点击处相连的同色区域。',
-  replace: '把全图所有该颜色的格子一次换掉。',
-};
-
 // 撤销栈存整张网格的快照。网格是每格 1 字节，即使 300×300 也只有 90KB，
 // 比记录增量简单得多，也不怕漏记。
 const HISTORY_LIMIT = 60;
@@ -826,7 +1320,7 @@ document.getElementById('tools').addEventListener('click', e => {
   if (!btn) return;
   state.tool = btn.dataset.tool;
   [...e.currentTarget.children].forEach(b => b.classList.toggle('active', b === btn));
-  document.getElementById('toolHint').textContent = TOOL_HINTS[state.tool];
+  document.getElementById('toolHint').textContent = t('toolHint.' + state.tool);
   canvas.style.cursor = state.tool === 'brush' ? 'crosshair' : 'cell';
 });
 
@@ -1060,15 +1554,6 @@ canvas.addEventListener('pointerup', () => {
 });
 
 /* ---------- 图层与排版 ---------- */
-const MODE_HINTS = {
-  layout: '摆放图片。任何改动都会重新量化，手工涂的格子会被覆盖。',
-  paint: '逐格修改颜色。切回排版会丢失这些改动。',
-};
-const LTOOL_HINTS = {
-  move: '拖动图层改位置，拖角上的方块改大小。',
-  crop: '在图层里拖动可平移画面，滚轮或滑块缩放。',
-};
-
 function renderLayers() {
   const list = document.getElementById('layerList');
   document.getElementById('layerEmpty').hidden = state.layers.length > 0;
@@ -1077,9 +1562,9 @@ function renderLayers() {
     <div class="layer ${L.id === state.selected ? 'selected' : ''}" data-id="${L.id}">
       <img src="${L.img.src}" alt="">
       <span class="lname" title="${L.name}">${L.name}</span>
-      <button data-act="up" title="上移">↑</button>
-      <button data-act="down" title="下移">↓</button>
-      <button data-act="del" title="删除">✕</button>
+      <button data-act="up" title="${t('layerUp')}">↑</button>
+      <button data-act="down" title="${t('layerDown')}">↓</button>
+      <button data-act="del" title="${t('layerDel')}">✕</button>
     </div>`).join('');
   syncCropControls();
 }
@@ -1138,7 +1623,7 @@ function arrange(kind) {
 
 document.querySelectorAll('[data-arrange]').forEach(btn => {
   btn.addEventListener('click', () => {
-    if (state.layers.length === 0) { alert('请先添加图片'); return; }
+    if (state.layers.length === 0) { alert(t('alertAddImage')); return; }
     arrange(btn.dataset.arrange);
     refresh();
   });
@@ -1149,7 +1634,7 @@ document.getElementById('modes').addEventListener('click', e => {
   if (!btn) return;
   state.mode = btn.dataset.mode;
   [...e.currentTarget.children].forEach(b => b.classList.toggle('active', b === btn));
-  document.getElementById('modeHint').textContent = MODE_HINTS[state.mode];
+  document.getElementById('modeHint').textContent = t('modeHint.' + state.mode);
   document.getElementById('layoutPanel').style.display = state.mode === 'layout' ? '' : 'none';
   document.getElementById('paintPanel').style.display = state.mode === 'paint' ? '' : 'none';
   canvas.style.cursor = state.mode === 'layout' ? 'move' : 'crosshair';
@@ -1161,7 +1646,7 @@ document.getElementById('layoutTools').addEventListener('click', e => {
   if (!btn) return;
   state.layoutTool = btn.dataset.ltool;
   [...e.currentTarget.children].forEach(b => b.classList.toggle('active', b === btn));
-  document.getElementById('ltoolHint').textContent = LTOOL_HINTS[state.layoutTool];
+  document.getElementById('ltoolHint').textContent = t('ltoolHint.' + state.layoutTool);
   syncCropControls();
   repaint();
 });
@@ -1222,14 +1707,14 @@ async function loadImage(file) {
 
 async function addFiles(files) {
   const images = [...files].filter(f => f.type.startsWith('image/'));
-  if (images.length === 0) { alert('请选择图片文件'); return; }
+  if (images.length === 0) { alert(t('alertChooseImage')); return; }
 
   const wasEmpty = state.layers.length === 0;
   for (const file of images) {
     try {
       state.layers.push(newLayer(await loadImage(file), file.name));
     } catch {
-      alert(`「${file.name}」无法读取，已跳过`);
+      alert(t('alertSkip', { name: file.name }));
     }
   }
   if (state.layers.length === 0) return;
@@ -1245,7 +1730,7 @@ async function addFiles(files) {
 
 /* ---------- 导出按钮 ---------- */
 document.getElementById('download').addEventListener('click', () => {
-  if (!state.grid) { alert('请先上传图片'); return; }
+  if (!state.grid) { alert(t('alertUploadFirst')); return; }
   const sheet = buildSheet();
   const a = document.createElement('a');
   a.download = `cubewall-${gridW()}x${gridH()}-n${state.order}.png`;
@@ -1254,21 +1739,42 @@ document.getElementById('download').addEventListener('click', () => {
 });
 
 document.getElementById('print').addEventListener('click', () => {
-  if (!state.grid) { alert('请先上传图片'); return; }
+  if (!state.grid) { alert(t('alertUploadFirst')); return; }
   window.print();
 });
 
+function applyLang() {
+  applyStaticLang();
+  renderSwatches();
+  renderPadOptions();
+  renderLayers();
+  document.getElementById('toolHint').textContent = t('toolHint.' + state.tool);
+  document.getElementById('fitHint').textContent = t('fitHint.' + state.fitMode);
+  document.getElementById('modeHint').textContent = t('modeHint.' + state.mode);
+  document.getElementById('ltoolHint').textContent = t('ltoolHint.' + state.layoutTool);
+  renderPreview();
+}
+
+document.getElementById('langSwitch').addEventListener('click', e => {
+  const btn = e.target.closest('button[data-lang]');
+  if (!btn || btn.dataset.lang === lang) return;
+  lang = btn.dataset.lang;
+  try { localStorage.setItem(LANG_KEY, lang); } catch { /* 隐私模式：仅本次会话 */ }
+  applyLang();
+});
+
+document.getElementById('themeSwitch').addEventListener('click', e => {
+  const btn = e.target.closest('button[data-theme]');
+  if (!btn || btn.dataset.theme === themePref) return;
+  themePref = btn.dataset.theme;
+  applyTheme();
+});
+
 /* ---------- 启动 ---------- */
-renderSwatches();
-renderPadOptions();
-renderLayers();
+applyTheme();
+applyLang();
 syncSizeInputs();
-document.getElementById('toolHint').textContent = TOOL_HINTS[state.tool];
-document.getElementById('fitHint').textContent = FIT_HINTS[state.fitMode];
-document.getElementById('modeHint').textContent = MODE_HINTS[state.mode];
-document.getElementById('ltoolHint').textContent = LTOOL_HINTS[state.layoutTool];
 canvas.style.cursor = 'move';
-renderPreview();
 </script>
 </body>
 </html>
