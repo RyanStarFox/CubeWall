@@ -6,8 +6,6 @@ Upload an image and get a build blueprint for a wall made of Rubik's cubes.
 
 Everything runs in your browser. Your images are never uploaded anywhere.
 
-![Chinese UI example](Examples/clawds_cn.png)
-
 ![English UI example](Examples/clawds_en.png)
 
 ## Getting started
