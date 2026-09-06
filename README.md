@@ -8,8 +8,6 @@
 
 ![中文界面示例](Examples/clawds_cn.png)
 
-![英文界面示例](Examples/clawds_en.png)
-
 ## 使用
 
 下载 `index.html`，双击用浏览器打开即可。没有构建步骤，不需要安装任何东西。
