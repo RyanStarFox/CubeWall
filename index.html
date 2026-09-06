@@ -92,7 +92,7 @@
     background: var(--bg);
     color: var(--text);
   }
-  .app { display: grid; grid-template-columns: 320px 1fr; min-height: 100vh; }
+  .app { display: grid; grid-template-columns: 480px 1fr; min-height: 100vh; }
   .controls {
     padding: 20px;
     background: var(--panel);
@@ -103,6 +103,8 @@
     overflow-y: auto;
     max-height: 100vh;
   }
+  .brand, .drop-group, .panes, .export { flex-shrink: 0; }
+  .pane.is-open { flex: 1; min-height: 0; overflow: auto; }
   .stage { padding: 24px; overflow: auto; }
   .brand { display: flex; flex-wrap: wrap; align-items: center; gap: 8px; }
   .brand h1 { flex: 1; min-width: 0; }
@@ -223,34 +225,35 @@
   .tools button.active { background: var(--accent); color: var(--on-accent); border-color: var(--accent); font-weight: 600; }
   button:disabled { opacity: .4; cursor: default; }
   button:disabled:hover { border-color: var(--line); }
-  .counts { display: grid; gap: 6px; }
-  .count-row { display: flex; align-items: center; gap: 8px; font-variant-numeric: tabular-nums; }
-  .count-row .chip { width: 16px; height: 16px; border-radius: 3px; border: 1px solid rgba(0,0,0,.35); }
-  .count-row .n { margin-left: auto; }
   #canvasWrap { display: inline-block; background: var(--canvas-pad); padding: 12px; border-radius: 8px; border: 1px solid var(--line); max-width: 100%; }
+  #canvasWrap[hidden] { display: none; }
   canvas { display: block; max-width: 100%; height: auto; image-rendering: pixelated; cursor: crosshair; touch-action: none; }
 
-  .mobile-panes { display: none; }
-  .pane { display: contents; }
-  .brush-row { display: none; }
-  .brand { order: 0; }
-  .drop-group { order: 2; }
-  .desktop-mode { order: 3; }
-  #paneSetup > .group { order: 5; }
-  #paneLayout > .group { order: 6; }
-  #panePaint > .group { order: 7; }
-  .export { order: 8; }
-
+  .panes { display: flex; }
+  .panes button { padding: 8px 4px; font-size: 13px; }
+  .pane { display: none; flex-direction: column; gap: 20px; }
+  .pane.is-open { display: flex; }
+  .pane .group:first-child { border-top: none; padding-top: 0; }
+  .brush-row {
+    display: grid;
+    grid-template-columns: repeat(6, 1fr);
+    gap: 8px;
+    margin: 0 0 12px;
+  }
   .brush-chip {
     height: 36px; border: 2px solid transparent; border-radius: 6px; padding: 0;
     box-shadow: inset 0 0 0 1px var(--chip-edge);
   }
   .brush-chip.selected { border-color: var(--accent); }
+  .empty { color: var(--muted); padding: 24px 0; text-align: center; }
+  .meta { color: var(--muted); font-size: 12px; margin-bottom: 12px; }
+  .warn { color: var(--warn); font-size: 12px; }
 
   @media (max-width: 800px) {
     .app {
       display: grid;
       grid-template-columns: 1fr;
+      grid-template-rows: auto auto auto auto 1fr auto;
       grid-template-areas:
         "brand"
         "drop"
@@ -291,27 +294,15 @@
       bottom: 0;
       z-index: 5;
     }
-    .desktop-mode { display: none; }
-    .mobile-panes {
+    .panes {
       grid-area: panes;
-      display: flex;
       margin: 0 16px 12px;
     }
-    .mobile-panes button { min-height: 44px; }
+    .panes button { min-height: 44px; }
     .pane {
       grid-area: body;
-      display: none;
-      flex-direction: column;
-      gap: 20px;
       padding: 0 16px 16px;
       background: var(--panel);
-    }
-    .pane.is-open { display: flex; }
-    .brush-row {
-      display: grid;
-      grid-template-columns: repeat(6, 1fr);
-      gap: 8px;
-      margin: 0 0 12px;
     }
     .lang button { padding: 8px 4px; min-height: 36px; }
     button { min-height: 40px; }
@@ -319,10 +310,9 @@
     input[type="number"], select, .swatch .hex { font-size: 16px; }
     .picker { width: min(280px, calc(100vw - 24px)); }
     #canvasWrap { display: block; }
+    #canvasWrap[hidden] { display: none; }
+    .empty { padding: 12px 0; }
   }
-  .empty { color: var(--muted); padding: 60px 0; text-align: center; }
-  .meta { color: var(--muted); font-size: 12px; margin-bottom: 12px; }
-  .warn { color: var(--warn); font-size: 12px; }
   .sheet-title { display: none; }
   #printSheet { display: none; }
 
@@ -330,7 +320,7 @@
     @page { margin: 8mm; }
     body { background: #fff; color: #000; }
     .app { display: block; }
-    .controls, .picker, .mobile-panes, .drop-group, .brand, .pane, .export, .desktop-mode { display: none; }
+    .controls, .picker, .panes, .drop-group, .brand, .pane, .export { display: none; }
     .stage { padding: 0; }
     #canvasWrap, .empty, .meta, .sheet-title, .stage > .group { display: none !important; }
     #printSheet { display: block; width: 100%; height: auto; }
@@ -366,22 +356,13 @@
       <input type="file" id="file" accept="image/*" multiple hidden>
     </div>
 
-    <div class="lang mobile-panes" id="mobilePanes" role="tablist">
-      <button type="button" data-pane="setup" data-i18n="settings" aria-controls="paneSetup" aria-expanded="false">设置</button>
+    <div class="lang panes" id="paneTabs" role="tablist">
+      <button type="button" data-pane="setup" class="active" data-i18n="settings" aria-controls="paneSetup" aria-expanded="true">设置</button>
       <button type="button" data-pane="layout" data-i18n="paneLayout" aria-controls="paneLayout" aria-expanded="false">布局</button>
       <button type="button" data-pane="paint" data-i18n="paint" aria-controls="panePaint" aria-expanded="false">上色</button>
     </div>
 
-    <div class="group desktop-mode">
-      <h2 data-i18n="mode">模式</h2>
-      <div class="tools" id="modes">
-        <button data-mode="layout" class="active" data-i18n="layout">排版</button>
-        <button data-mode="paint" data-i18n="paint">上色</button>
-      </div>
-      <p class="hint" id="modeHint"></p>
-    </div>
-
-    <div class="pane" id="paneSetup" data-pane="setup">
+    <div class="pane is-open" id="paneSetup" data-pane="setup">
       <div class="group">
         <h2 data-i18n="cubeType">魔方类型</h2>
         <div class="row">
@@ -396,8 +377,8 @@
             </select>
           </div>
           <div id="customWrap" style="display:none">
-            <label for="customOrder">N（2–7）</label>
-            <input type="number" id="customOrder" min="2" max="7" value="3">
+            <label for="customOrder">N（2–10）</label>
+            <input type="number" id="customOrder" min="2" max="10" value="3">
           </div>
         </div>
       </div>
@@ -513,10 +494,6 @@
     <div class="meta" id="meta" data-i18n="noImage">还没有图片。</div>
     <div id="canvasWrap" hidden><canvas id="preview"></canvas></div>
     <div class="empty" id="empty" data-i18n="empty">拖入一张图片开始</div>
-    <div class="group" style="margin-top:20px;border:none;padding:0">
-      <h2 data-i18n="stickerUsage">贴纸用量</h2>
-      <div class="counts print-counts" id="counts"></div>
-    </div>
     <img id="printSheet" alt="">
   </main>
 </div>
@@ -586,7 +563,6 @@ const I18N = {
     ditherHint: '0% = 纯色块，边界干净；越高层次越丰富但杂点越多。色块图建议 0%，照片 40–60%。',
     download: '下载 PNG',
     print: '打印',
-    stickerUsage: '贴纸用量',
     noImage: '还没有图片。',
     empty: '拖入一张图片开始',
     colorList: '白,黄,蓝,绿,红,橙',
@@ -667,7 +643,6 @@ const I18N = {
     ditherHint: '0% = flat blocks, clean edges. Higher values add detail but more noise. Use 0% for graphics, 40–60% for photos.',
     download: 'Download PNG',
     print: 'Print',
-    stickerUsage: 'Sticker counts',
     noImage: 'No image yet.',
     empty: 'Drop an image to start',
     colorList: 'White,Yellow,Blue,Green,Red,Orange',
@@ -1033,7 +1008,6 @@ function renderPreview() {
   document.getElementById('canvasWrap').hidden = !hasGrid;
   document.getElementById('empty').hidden = hasGrid;
   if (!hasGrid) {
-    document.getElementById('counts').innerHTML = '';
     document.getElementById('meta').textContent = t('noImage');
     return;
   }
@@ -1050,19 +1024,6 @@ function renderPreview() {
   document.getElementById('sheetTitle').textContent = t('sheetTitle', {
     cx: state.cubesX, cy: state.cubesY, order: state.order,
   });
-  renderCounts();
-}
-
-function renderCounts() {
-  const counts = new Array(6).fill(0);
-  for (const v of state.grid) counts[v]++;
-  document.getElementById('counts').innerHTML = colorNames().map((name, i) => `
-    <div class="count-row">
-      <span class="chip" style="background:${state.colors[i]}"></span>
-      <span>${name}</span>
-      <span class="n">${counts[i]}</span>
-    </div>`).join('');
-  return counts;
 }
 
 /* ---------- 导出 ---------- */
@@ -1375,7 +1336,7 @@ document.getElementById('order').addEventListener('change', e => {
 });
 
 function clampOrder(v) {
-  return Math.min(7, Math.max(2, Math.round(Number(v) || 3)));
+  return Math.min(10, Math.max(2, Math.round(Number(v) || 3)));
 }
 
 document.getElementById('customOrder').addEventListener('change', e => {
@@ -1468,7 +1429,6 @@ function stepHistory(from, to) {
   state.grid = from.pop();
   syncHistoryButtons();
   repaint();
-  renderCounts();
 }
 
 document.getElementById('undo').addEventListener('click', () => stepHistory(history.undo, history.redo));
@@ -1657,7 +1617,6 @@ canvas.addEventListener('pointerdown', e => {
   if (!changed) history.undo.pop();   // 点了但没改动，不该占一格撤销
   syncHistoryButtons();
   repaint();
-  renderCounts();
 });
 
 canvas.addEventListener('pointermove', e => {
@@ -1684,7 +1643,6 @@ canvas.addEventListener('pointermove', e => {
     }
     quantize();          // 排版时实时重算，所见即所得
     repaint();
-    renderCounts();
     return;
   }
 
@@ -1694,7 +1652,6 @@ canvas.addEventListener('pointermove', e => {
     paintLine(drag.last, c);   // 补上两次事件之间跳过的格子
     drag.last = c;
     repaint();
-    renderCounts();
   } else {
     drag.b = c;
     repaint();
@@ -1713,7 +1670,6 @@ canvas.addEventListener('pointerup', () => {
     const { a, b } = drag;
     drag = null;
     fillRect(a, b, state.brush);
-    renderCounts();
   }
   drag = null;
   repaint();
@@ -1795,69 +1751,29 @@ document.querySelectorAll('[data-arrange]').forEach(btn => {
   });
 });
 
-const mobileMq = window.matchMedia('(max-width: 800px)');
-const isMobileLayout = () => mobileMq.matches;
-
-function syncModePanels() {
-  const layout = document.getElementById('layoutPanel');
-  const paint = document.getElementById('paintPanel');
-  if (isMobileLayout()) {
-    layout.style.display = '';
-    paint.style.display = '';
-  } else {
-    layout.style.display = state.mode === 'layout' ? '' : 'none';
-    paint.style.display = state.mode === 'paint' ? '' : 'none';
-  }
-}
-
 function setMode(mode) {
   state.mode = mode;
-  document.querySelectorAll('#modes [data-mode]').forEach(b => {
-    b.classList.toggle('active', b.dataset.mode === mode);
-  });
-  document.getElementById('modeHint').textContent = t('modeHint.' + mode);
   canvas.style.cursor = mode === 'layout' ? 'move' : 'crosshair';
-  syncModePanels();
   repaint();
 }
 
-function setMobilePane(pane) {
-  const current = document.querySelector('#mobilePanes button.active');
-  const collapse = current && current.dataset.pane === pane;
-  document.querySelectorAll('#mobilePanes button').forEach(b => {
-    const on = !collapse && b.dataset.pane === pane;
+function setPane(pane) {
+  document.querySelectorAll('#paneTabs button').forEach(b => {
+    const on = b.dataset.pane === pane;
     b.classList.toggle('active', on);
     b.setAttribute('aria-expanded', String(on));
   });
   document.querySelectorAll('.pane').forEach(p => {
-    p.classList.toggle('is-open', !collapse && p.dataset.pane === pane);
+    p.classList.toggle('is-open', p.dataset.pane === pane);
   });
-  if (collapse) return;
   if (pane === 'layout') setMode('layout');
   else if (pane === 'paint') setMode('paint');
 }
 
-document.getElementById('modes').addEventListener('click', e => {
-  const btn = e.target.closest('button[data-mode]');
-  if (!btn) return;
-  setMode(btn.dataset.mode);
-});
-
-document.getElementById('mobilePanes').addEventListener('click', e => {
+document.getElementById('paneTabs').addEventListener('click', e => {
   const btn = e.target.closest('button[data-pane]');
   if (!btn) return;
-  setMobilePane(btn.dataset.pane);
-});
-
-mobileMq.addEventListener('change', () => {
-  if (!isMobileLayout()) {
-    document.querySelectorAll('#mobilePanes button').forEach(b => {
-      b.classList.remove('active');
-      b.setAttribute('aria-expanded', 'false');
-    });
-    document.querySelectorAll('.pane').forEach(p => p.classList.remove('is-open'));
-  }
-  syncModePanels();
+  setPane(btn.dataset.pane);
 });
 
 document.getElementById('layoutTools').addEventListener('click', e => {
@@ -2006,7 +1922,6 @@ function applyLang() {
   renderLayers();
   document.getElementById('toolHint').textContent = t('toolHint.' + state.tool);
   document.getElementById('fitHint').textContent = t('fitHint.' + state.fitMode);
-  document.getElementById('modeHint').textContent = t('modeHint.' + state.mode);
   document.getElementById('ltoolHint').textContent = t('ltoolHint.' + state.layoutTool);
   renderPreview();
 }
@@ -2030,7 +1945,7 @@ document.getElementById('themeSwitch').addEventListener('click', e => {
 applyTheme();
 applyLang();
 syncSizeInputs();
-syncModePanels();
+setPane('setup');
 canvas.style.cursor = 'move';
 </script>
 </body>

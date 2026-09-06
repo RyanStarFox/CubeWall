@@ -17,7 +17,7 @@ Download `index.html` and open it in a browser. No build step, nothing to instal
 ## Features
 
 - **Colour quantisation** — maps any image onto the six cube sticker colours (white, yellow, blue, green, red, orange).
-- **Cube size** — 2×2, 3×3, 4×4, 5×5, or a custom N×N with N from 2 to 7. Defaults to 3×3.
+- **Cube size** — 2×2, 3×3, 4×4, 5×5, or a custom N×N with N from 2 to 10. Defaults to 3×3.
 - **Wall size** — set width and height in stickers; values snap to a multiple of the cube size, and the required cube count is shown live. Defaults to 30×30 stickers, i.e. 10×10 = 100 standard cubes.
 - **Aspect handling** — crop, pad (with your choice of border colour), or resize the wall to match the image. Defaults to padding.
 - **Multi-image collage** — add several images at once and lay them out with *Fill*, *Row*, *Column* or *Grid*, or drag layers freely in the preview, resize them by their corners, and overlap them in any stacking order.
@@ -30,3 +30,7 @@ Download `index.html` and open it in a browser. No build step, nothing to instal
 ## Notes
 
 `Examples/` contains finished blueprints produced with this tool. Design and implementation decisions are recorded in `docs/superpowers/specs/`.
+
+## License
+
+[MIT](LICENSE)
