@@ -2,7 +2,7 @@
 <html lang="zh-CN">
 <head>
 <meta charset="utf-8">
-<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
 <title>魔方墙图纸生成器</title>
 <!-- 图标内嵌为 data URI，保证单个 HTML 文件拿到哪都能显示。
      小尺寸用正面 3×3 平面图：四颗魔方的立体图在 16px 下会糊成一团。 -->
@@ -19,6 +19,7 @@
 </script>
 <style>
   :root {
+    --font: system-ui, -apple-system, "Segoe UI", Roboto, "Helvetica Neue", "PingFang SC", "Hiragino Sans GB", "Microsoft YaHei UI", "Microsoft YaHei", "Noto Sans SC", "Noto Sans CJK SC", "Source Han Sans SC", "WenQuanYi Micro Hei", sans-serif;
     color-scheme: dark;
     --bg: #14161a;
     --panel: #1c1f26;
@@ -87,7 +88,7 @@
   * { box-sizing: border-box; }
   body {
     margin: 0;
-    font: 14px/1.5 -apple-system, "PingFang SC", "Microsoft YaHei", sans-serif;
+    font: 14px/1.5 var(--font);
     background: var(--bg);
     color: var(--text);
   }
@@ -177,7 +178,7 @@
   .swatch .hex {
     display: block; width: 100%; margin-top: 4px; padding: 2px 4px;
     background: var(--inset); color: var(--text); border: 1px solid var(--line);
-    border-radius: 3px; font: 10px/1.4 ui-monospace, SFMono-Regular, Menlo, monospace;
+    border-radius: 3px; font: 10px/1.4 ui-monospace, SFMono-Regular, Menlo, Consolas, "Liberation Mono", monospace;
     text-align: center; letter-spacing: .02em;
   }
   .swatch .edit-color {
@@ -226,23 +227,113 @@
   .count-row { display: flex; align-items: center; gap: 8px; font-variant-numeric: tabular-nums; }
   .count-row .chip { width: 16px; height: 16px; border-radius: 3px; border: 1px solid rgba(0,0,0,.35); }
   .count-row .n { margin-left: auto; }
-  #canvasWrap { display: inline-block; background: var(--canvas-pad); padding: 12px; border-radius: 8px; border: 1px solid var(--line); }
-  canvas { display: block; max-width: 100%; height: auto; image-rendering: pixelated; cursor: crosshair; }
+  #canvasWrap { display: inline-block; background: var(--canvas-pad); padding: 12px; border-radius: 8px; border: 1px solid var(--line); max-width: 100%; }
+  canvas { display: block; max-width: 100%; height: auto; image-rendering: pixelated; cursor: crosshair; touch-action: none; }
+
+  .mobile-panes { display: none; }
+  .pane { display: contents; }
+  .brush-row { display: none; }
+  .brand { order: 0; }
+  .drop-group { order: 2; }
+  .desktop-mode { order: 3; }
+  #paneSetup > .group { order: 5; }
+  #paneLayout > .group { order: 6; }
+  #panePaint > .group { order: 7; }
+  .export { order: 8; }
+
+  .brush-chip {
+    height: 36px; border: 2px solid transparent; border-radius: 6px; padding: 0;
+    box-shadow: inset 0 0 0 1px var(--chip-edge);
+  }
+  .brush-chip.selected { border-color: var(--accent); }
+
+  @media (max-width: 800px) {
+    .app {
+      display: grid;
+      grid-template-columns: 1fr;
+      grid-template-areas:
+        "brand"
+        "drop"
+        "stage"
+        "panes"
+        "body"
+        "export";
+      min-height: 100dvh;
+    }
+    .controls {
+      display: contents;
+      max-height: none;
+      border: none;
+      padding: 0;
+    }
+    .brand {
+      grid-area: brand;
+      padding: 16px 16px 8px;
+      background: var(--panel);
+    }
+    .drop-group {
+      grid-area: drop;
+      padding: 0 16px 12px;
+      background: var(--panel);
+      border-top: none;
+    }
+    .stage {
+      grid-area: stage;
+      padding: 12px 16px 8px;
+    }
+    .export {
+      grid-area: export;
+      order: unset;
+      padding: 12px 16px calc(12px + env(safe-area-inset-bottom));
+      background: var(--panel);
+      border-top: 1px solid var(--line);
+      position: sticky;
+      bottom: 0;
+      z-index: 5;
+    }
+    .desktop-mode { display: none; }
+    .mobile-panes {
+      grid-area: panes;
+      display: flex;
+      margin: 0 16px 12px;
+    }
+    .mobile-panes button { min-height: 44px; }
+    .pane {
+      grid-area: body;
+      display: none;
+      flex-direction: column;
+      gap: 20px;
+      padding: 0 16px 16px;
+      background: var(--panel);
+    }
+    .pane.is-open { display: flex; }
+    .brush-row {
+      display: grid;
+      grid-template-columns: repeat(6, 1fr);
+      gap: 8px;
+      margin: 0 0 12px;
+    }
+    .lang button { padding: 8px 4px; min-height: 36px; }
+    button { min-height: 40px; }
+    .layer button { min-width: 36px; min-height: 36px; padding: 6px; }
+    input[type="number"], select, .swatch .hex { font-size: 16px; }
+    .picker { width: min(280px, calc(100vw - 24px)); }
+    #canvasWrap { display: block; }
+  }
   .empty { color: var(--muted); padding: 60px 0; text-align: center; }
   .meta { color: var(--muted); font-size: 12px; margin-bottom: 12px; }
   .warn { color: var(--warn); font-size: 12px; }
   .sheet-title { display: none; }
+  #printSheet { display: none; }
 
   @media print {
+    @page { margin: 8mm; }
     body { background: #fff; color: #000; }
     .app { display: block; }
-    .controls { display: none; }
+    .controls, .picker, .mobile-panes, .drop-group, .brand, .pane, .export, .desktop-mode { display: none; }
     .stage { padding: 0; }
-    #canvasWrap { border: none; background: #fff; padding: 0; }
-    .sheet-title { display: block; font-size: 14px; margin-bottom: 8px; }
-    .meta { color: #333; }
-    .count-row { color: #000; }
-    .print-counts { display: grid; grid-template-columns: repeat(3, auto); gap: 4px 24px; margin-top: 12px; }
+    #canvasWrap, .empty, .meta, .sheet-title, .stage > .group { display: none !important; }
+    #printSheet { display: block; width: 100%; height: auto; }
   }
 </style>
 </head>
@@ -267,7 +358,7 @@
       </div>
     </div>
 
-    <div class="group">
+    <div class="group drop-group">
       <div class="drop" id="drop">
         <span data-i18n="dropTitle">拖入图片，或点击选择</span><br>
         <span class="hint" data-i18n="dropHint">可一次选多张，图片只在本机处理</span>
@@ -275,7 +366,13 @@
       <input type="file" id="file" accept="image/*" multiple hidden>
     </div>
 
-    <div class="group">
+    <div class="lang mobile-panes" id="mobilePanes" role="tablist">
+      <button type="button" data-pane="setup" data-i18n="settings" aria-controls="paneSetup" aria-expanded="false">设置</button>
+      <button type="button" data-pane="layout" data-i18n="paneLayout" aria-controls="paneLayout" aria-expanded="false">布局</button>
+      <button type="button" data-pane="paint" data-i18n="paint" aria-controls="panePaint" aria-expanded="false">上色</button>
+    </div>
+
+    <div class="group desktop-mode">
       <h2 data-i18n="mode">模式</h2>
       <div class="tools" id="modes">
         <button data-mode="layout" class="active" data-i18n="layout">排版</button>
@@ -284,116 +381,126 @@
       <p class="hint" id="modeHint"></p>
     </div>
 
-    <div class="group" id="layoutPanel">
-      <h2 data-i18n="layers">图层</h2>
-      <div id="layerList"></div>
-      <p class="hint" id="layerEmpty" data-i18n="layerEmpty">还没有图片。</p>
-
-      <h2 style="margin-top:14px" data-i18n="arrange">快速排列</h2>
-      <div class="tools">
-        <button data-arrange="full" data-i18n="full">铺满</button>
-        <button data-arrange="row" data-i18n="row">横排</button>
-        <button data-arrange="col" data-i18n="col">竖排</button>
-        <button data-arrange="grid" data-i18n="grid">方阵</button>
+    <div class="pane" id="paneSetup" data-pane="setup">
+      <div class="group">
+        <h2 data-i18n="cubeType">魔方类型</h2>
+        <div class="row">
+          <div>
+            <label for="order" data-i18n="order">阶数</label>
+            <select id="order">
+              <option value="2">2×2</option>
+              <option value="3" selected>3×3</option>
+              <option value="4">4×4</option>
+              <option value="5">5×5</option>
+              <option value="custom" data-i18n="custom">自定义</option>
+            </select>
+          </div>
+          <div id="customWrap" style="display:none">
+            <label for="customOrder">N（2–7）</label>
+            <input type="number" id="customOrder" min="2" max="7" value="3">
+          </div>
+        </div>
       </div>
 
-      <h2 style="margin-top:14px" data-i18n="canvasOps">画布操作</h2>
-      <div class="tools" id="layoutTools">
-        <button data-ltool="move" class="active" data-i18n="move">移动 / 缩放</button>
-        <button data-ltool="crop" data-i18n="crop">取景</button>
+      <div class="group">
+        <h2 data-i18n="size">尺寸（贴纸）</h2>
+        <div class="row">
+          <div>
+            <label for="width" data-i18n="width">宽</label>
+            <input type="number" id="width" min="2" step="1" value="30">
+          </div>
+          <div>
+            <label for="height" data-i18n="height">高</label>
+            <input type="number" id="height" min="2" step="1" value="30">
+          </div>
+        </div>
+        <p class="hint" id="cubeInfo"></p>
+        <p class="warn" id="sizeWarn" hidden data-i18n="sizeWarn">单边超过 300 贴纸，渲染和打印会很吃力。</p>
       </div>
-      <p class="hint" id="ltoolHint"></p>
-      <div id="cropWrap" style="display:none">
-        <label for="zoom" style="margin-top:8px" data-i18n="zoom">取景缩放</label>
+
+      <div class="group">
+        <h2 data-i18n="colorsHelp">颜色</h2>
+        <p class="hint" data-i18n="colorsHint">点色块选画笔。色值和下面的色条可以改成你手上那套魔方的颜色，浏览器会记住。</p>
+        <div class="swatches" id="swatches"></div>
+        <button id="resetPalette" style="margin-top:10px" data-i18n="resetPalette">恢复标准配色</button>
+      </div>
+    </div>
+
+    <div class="pane" id="paneLayout" data-pane="layout">
+      <div class="group" id="layoutPanel">
+        <h2 data-i18n="layers">图层</h2>
+        <div id="layerList"></div>
+        <p class="hint" id="layerEmpty" data-i18n="layerEmpty">还没有图片。</p>
+
+        <h2 style="margin-top:14px" data-i18n="arrange">快速排列</h2>
+        <div class="tools">
+          <button data-arrange="full" data-i18n="full">铺满</button>
+          <button data-arrange="row" data-i18n="row">横排</button>
+          <button data-arrange="col" data-i18n="col">竖排</button>
+          <button data-arrange="grid" data-i18n="grid">方阵</button>
+        </div>
+
+        <h2 style="margin-top:14px" data-i18n="canvasOps">画布操作</h2>
+        <div class="tools" id="layoutTools">
+          <button data-ltool="move" class="active" data-i18n="move">移动 / 缩放</button>
+          <button data-ltool="crop" data-i18n="crop">取景</button>
+        </div>
+        <p class="hint" id="ltoolHint"></p>
+        <div id="cropWrap" style="display:none">
+          <label for="zoom" style="margin-top:8px" data-i18n="zoom">取景缩放</label>
+          <div class="row" style="align-items:center">
+            <input type="range" id="zoom" min="20" max="400" step="5" value="100" style="flex:3">
+            <span id="zoomVal" style="flex:1;text-align:right;font-variant-numeric:tabular-nums">100%</span>
+          </div>
+          <button id="resetCrop" style="margin-top:8px" data-i18n="resetCrop">重置取景</button>
+          <p class="hint" data-i18n="cropHint">缩小到 100% 以下会露出补白色。裁掉的部分随时能拖回来，原图不会被破坏。</p>
+        </div>
+      </div>
+
+      <div class="group">
+        <label for="fitMode" data-i18n="fitMode">比例不符时</label>
+        <select id="fitMode">
+          <option value="cover" data-i18n="fitCover">裁切（填满，切掉多余部分）</option>
+          <option value="contain" selected data-i18n="fitContain">补白（整图放进去，四周留边）</option>
+          <option value="match" data-i18n="fitMatch">按原图比例（自动改尺寸，不裁不留边）</option>
+        </select>
+        <div id="padWrap" style="margin-top:10px">
+          <label for="padColor" data-i18n="padColor">补白颜色</label>
+          <select id="padColor"></select>
+        </div>
+        <p class="hint" id="fitHint"></p>
+      </div>
+
+      <div class="group">
+        <h2 data-i18n="dither">抖动强度</h2>
         <div class="row" style="align-items:center">
-          <input type="range" id="zoom" min="20" max="400" step="5" value="100" style="flex:3">
-          <span id="zoomVal" style="flex:1;text-align:right;font-variant-numeric:tabular-nums">100%</span>
+          <input type="range" id="dither" min="0" max="100" step="5" value="0" style="flex:3">
+          <span id="ditherVal" style="flex:1;text-align:right;font-variant-numeric:tabular-nums">0%</span>
         </div>
-        <button id="resetCrop" style="margin-top:8px" data-i18n="resetCrop">重置取景</button>
-        <p class="hint" data-i18n="cropHint">缩小到 100% 以下会露出补白色。裁掉的部分随时能拖回来，原图不会被破坏。</p>
+        <p class="hint" data-i18n="ditherHint">0% = 纯色块，边界干净；越高层次越丰富但杂点越多。色块图建议 0%，照片 40–60%。</p>
       </div>
     </div>
 
-    <div class="group">
-      <h2 data-i18n="cubeType">魔方类型</h2>
-      <div class="row">
-        <div>
-          <label for="order" data-i18n="order">阶数</label>
-          <select id="order">
-            <option value="2">2×2</option>
-            <option value="3" selected>3×3</option>
-            <option value="4">4×4</option>
-            <option value="5">5×5</option>
-            <option value="custom" data-i18n="custom">自定义</option>
-          </select>
+    <div class="pane" id="panePaint" data-pane="paint">
+      <div class="group" id="paintPanel">
+        <h2 data-i18n="paintManual">手动上色</h2>
+        <div class="brush-row" id="brushRow"></div>
+        <div class="tools" id="tools">
+          <button data-tool="brush" class="active" data-i18n="brush">画笔</button>
+          <button data-tool="rect" data-i18n="rect">矩形</button>
+          <button data-tool="fill" data-i18n="fill">油漆桶</button>
+          <button data-tool="replace" data-i18n="replace">同色全换</button>
         </div>
-        <div id="customWrap" style="display:none">
-          <label for="customOrder">N（2–7）</label>
-          <input type="number" id="customOrder" min="2" max="7" value="3">
+        <p class="hint" id="toolHint"></p>
+        <div class="row" style="margin-top:10px">
+          <button id="undo" disabled data-i18n="undo">撤销</button>
+          <button id="redo" disabled data-i18n="redo">重做</button>
         </div>
+        <p class="hint" data-i18n="shortcuts">快捷键 ⌘Z 撤销、⌘⇧Z 重做。</p>
       </div>
     </div>
 
-    <div class="group">
-      <h2 data-i18n="size">尺寸（贴纸）</h2>
-      <div class="row">
-        <div>
-          <label for="width" data-i18n="width">宽</label>
-          <input type="number" id="width" min="2" step="1" value="30">
-        </div>
-        <div>
-          <label for="height" data-i18n="height">高</label>
-          <input type="number" id="height" min="2" step="1" value="30">
-        </div>
-      </div>
-      <p class="hint" id="cubeInfo"></p>
-      <p class="warn" id="sizeWarn" hidden data-i18n="sizeWarn">单边超过 300 贴纸，渲染和打印会很吃力。</p>
-      <label for="fitMode" style="margin-top:10px" data-i18n="fitMode">比例不符时</label>
-      <select id="fitMode">
-        <option value="cover" data-i18n="fitCover">裁切（填满，切掉多余部分）</option>
-        <option value="contain" selected data-i18n="fitContain">补白（整图放进去，四周留边）</option>
-        <option value="match" data-i18n="fitMatch">按原图比例（自动改尺寸，不裁不留边）</option>
-      </select>
-      <div id="padWrap" style="margin-top:10px">
-        <label for="padColor" data-i18n="padColor">补白颜色</label>
-        <select id="padColor"></select>
-      </div>
-      <p class="hint" id="fitHint"></p>
-    </div>
-
-    <div class="group">
-      <h2 data-i18n="colorsHelp">颜色</h2>
-      <p class="hint" data-i18n="colorsHint">点色块选画笔。色值和下面的色条可以改成你手上那套魔方的颜色，浏览器会记住。</p>
-      <div class="swatches" id="swatches"></div>
-      <button id="resetPalette" style="margin-top:10px" data-i18n="resetPalette">恢复标准配色</button>
-    </div>
-
-    <div class="group" id="paintPanel" style="display:none">
-      <h2 data-i18n="paintManual">手动上色</h2>
-      <div class="tools" id="tools">
-        <button data-tool="brush" class="active" data-i18n="brush">画笔</button>
-        <button data-tool="rect" data-i18n="rect">矩形</button>
-        <button data-tool="fill" data-i18n="fill">油漆桶</button>
-        <button data-tool="replace" data-i18n="replace">同色全换</button>
-      </div>
-      <p class="hint" id="toolHint"></p>
-      <div class="row" style="margin-top:10px">
-        <button id="undo" disabled data-i18n="undo">撤销</button>
-        <button id="redo" disabled data-i18n="redo">重做</button>
-      </div>
-      <p class="hint" data-i18n="shortcuts">快捷键 ⌘Z 撤销、⌘⇧Z 重做。</p>
-    </div>
-
-    <div class="group">
-      <h2 data-i18n="dither">抖动强度</h2>
-      <div class="row" style="align-items:center">
-        <input type="range" id="dither" min="0" max="100" step="5" value="0" style="flex:3">
-        <span id="ditherVal" style="flex:1;text-align:right;font-variant-numeric:tabular-nums">0%</span>
-      </div>
-      <p class="hint" data-i18n="ditherHint">0% = 纯色块，边界干净；越高层次越丰富但杂点越多。色块图建议 0%，照片 40–60%。</p>
-    </div>
-
-    <div class="group">
+    <div class="group export">
       <div class="row">
         <button class="primary" id="download" data-i18n="download">下载 PNG</button>
         <button id="print" data-i18n="print">打印</button>
@@ -410,6 +517,7 @@
       <h2 data-i18n="stickerUsage">贴纸用量</h2>
       <div class="counts print-counts" id="counts"></div>
     </div>
+    <img id="printSheet" alt="">
   </main>
 </div>
 
@@ -423,10 +531,13 @@
 const LANG_KEY = 'cubewall.lang.v1';
 const THEME_KEY = 'cubewall.theme.v1';
 const THEMES = ['auto', 'light', 'dark'];
+const UI_FONT = 'system-ui, -apple-system, "Segoe UI", Roboto, "Helvetica Neue", "PingFang SC", "Hiragino Sans GB", "Microsoft YaHei UI", "Microsoft YaHei", "Noto Sans SC", "Noto Sans CJK SC", "Source Han Sans SC", "WenQuanYi Micro Hei", sans-serif';
 const I18N = {
   zh: {
     title: '魔方墙图纸生成器',
     github: '在 GitHub 上查看源码',
+    settings: '设置',
+    paneLayout: '布局',
     themeAuto: '自动',
     themeLight: '浅色',
     themeDark: '深色',
@@ -447,7 +558,7 @@ const I18N = {
     crop: '取景',
     zoom: '取景缩放',
     resetCrop: '重置取景',
-    cropHint: '缩小到 100% 以下会露出补白色。裁掉的部分随时能拖回来，原图不会被破坏。',
+    cropHint: '缩小到 100% 以下会露出补白色。裁掉的部分随时能拖回来，原图不会被破坏。手机上可双指缩放。',
     cubeType: '魔方类型',
     order: '阶数',
     custom: '自定义',
@@ -497,7 +608,7 @@ const I18N = {
     'modeHint.layout': '摆放图片。任何改动都会重新量化，手工涂的格子会被覆盖。',
     'modeHint.paint': '逐格修改颜色。切回排版会丢失这些改动。',
     'ltoolHint.move': '拖动图层改位置，拖角上的方块改大小。',
-    'ltoolHint.crop': '在图层里拖动可平移画面，滚轮或滑块缩放。',
+    'ltoolHint.crop': '在图层里拖动可平移画面，滚轮、滑块或双指缩放。',
     alertAddImage: '请先添加图片',
     alertChooseImage: '请选择图片文件',
     alertSkip: '「{name}」无法读取，已跳过',
@@ -506,6 +617,8 @@ const I18N = {
   en: {
     title: 'Cube Wall Blueprint',
     github: 'View source on GitHub',
+    settings: 'Settings',
+    paneLayout: 'Layout',
     themeAuto: 'Auto',
     themeLight: 'Light',
     themeDark: 'Dark',
@@ -526,7 +639,7 @@ const I18N = {
     crop: 'Frame',
     zoom: 'Frame zoom',
     resetCrop: 'Reset frame',
-    cropHint: 'Zooming below 100% shows the pad colour. Cropping is reversible — the original stays intact.',
+    cropHint: 'Zooming below 100% shows the pad colour. Cropping is reversible — the original stays intact. Pinch to zoom on a phone.',
     cubeType: 'Cube type',
     order: 'Order',
     custom: 'Custom',
@@ -576,7 +689,7 @@ const I18N = {
     'modeHint.layout': 'Arrange images. Any change re-quantises and overwrites painted cells.',
     'modeHint.paint': 'Edit cells by hand. Switching back to Layout discards these edits.',
     'ltoolHint.move': 'Drag a layer to move it; drag a corner handle to resize.',
-    'ltoolHint.crop': 'Drag inside a layer to pan; scroll or use the slider to zoom.',
+    'ltoolHint.crop': 'Drag inside a layer to pan; scroll, use the slider, or pinch to zoom.',
     alertAddImage: 'Add an image first',
     alertChooseImage: 'Please choose image files',
     alertSkip: 'Could not read “{name}”, skipped',
@@ -889,7 +1002,7 @@ function drawGrid(ctx, cell) {
   // 魔方编号：块太小就不画，避免糊成一团
   const block = N * cell;
   if (block >= 34) {
-    ctx.font = `${Math.max(9, Math.round(block / 5))}px -apple-system, sans-serif`;
+    ctx.font = `${Math.max(9, Math.round(block / 5))}px ${UI_FONT}`;
     ctx.textBaseline = 'top';
     for (let cy = 0; cy < state.cubesY; cy++) {
       for (let cx = 0; cx < state.cubesX; cx++) {
@@ -953,9 +1066,28 @@ function renderCounts() {
 }
 
 /* ---------- 导出 ---------- */
-function buildSheet() {
+// 按 A4 短边 300dpi（2480px）估格子边长，大墙受画布上限 8192 卡住。
+// 屏幕预览仍用小格子，只有下载/打印走这张图。
+function sheetLayout() {
   const W = gridW(), H = gridH();
-  const cell = 24, pad = 28, legendH = 84;
+  const maxPx = 8192, target = 2480;
+  const cell = Math.max(24, Math.min(
+    128,
+    Math.floor((target - 96) / Math.max(W, H)),
+    Math.floor((maxPx - 96) / W),
+    Math.floor((maxPx - 280) / H)
+  ));
+  const scale = cell / 24;
+  return {
+    W, H, cell,
+    pad: Math.max(40, Math.round(28 * scale)),
+    scale,
+    legendH: Math.round(84 * scale),
+  };
+}
+
+function buildSheet() {
+  const { W, H, cell, pad, scale, legendH } = sheetLayout();
   const out = document.createElement('canvas');
   out.width = W * cell + pad * 2;
   out.height = H * cell + pad * 2 + legendH;
@@ -971,33 +1103,39 @@ function buildSheet() {
   const counts = new Array(6).fill(0);
   for (const v of state.grid) counts[v]++;
 
+  const font = `${Math.round(16 * scale)}px ${UI_FONT}`;
+  const fontSm = `${Math.round(14 * scale)}px ${UI_FONT}`;
+  const fontXs = `${Math.round(12 * scale)}px ${UI_FONT}`;
+  const sw = Math.round(18 * scale);
+  const gap = Math.round(22 * scale);
+  const baseY = pad + H * cell + Math.round(14 * scale);
+
   c.fillStyle = '#111';
-  c.font = '16px -apple-system, "PingFang SC", sans-serif';
+  c.font = font;
   c.textBaseline = 'top';
-  const baseY = pad + H * cell + 14;
   c.fillText(
     t('sheetLine', { w: W, h: H, order: state.order, cx: state.cubesX, cy: state.cubesY, n: state.cubesX * state.cubesY }) +
     (sourceLabel() ? ` · ${sourceLabel()}` : ''),
     pad, baseY
   );
 
-  c.font = '14px -apple-system, "PingFang SC", sans-serif';
+  c.font = fontSm;
   let x = pad;
   for (let i = 0; i < 6; i++) {
     c.fillStyle = state.colors[i];
-    c.fillRect(x, baseY + 30, 18, 18);
+    c.fillRect(x, baseY + Math.round(30 * scale), sw, sw);
     c.strokeStyle = '#666';
-    c.lineWidth = 1;
-    c.strokeRect(x + .5, baseY + 30.5, 18, 18);
+    c.lineWidth = Math.max(1, Math.round(scale));
+    c.strokeRect(x + .5, baseY + Math.round(30 * scale) + .5, sw, sw);
     c.fillStyle = '#111';
     const text = `${colorNames()[i]} ${counts[i]}`;
-    c.fillText(text, x + 24, baseY + 32);
-    x += 24 + c.measureText(text).width + 22;
+    c.fillText(text, x + sw + Math.round(6 * scale), baseY + Math.round(32 * scale));
+    x += sw + Math.round(6 * scale) + c.measureText(text).width + gap;
   }
 
   c.fillStyle = '#888';
-  c.font = '12px -apple-system, "PingFang SC", sans-serif';
-  c.fillText('github.com/RyanStarFox/CubeWall', pad, baseY + 58);
+  c.font = fontXs;
+  c.fillText('github.com/RyanStarFox/CubeWall', pad, baseY + Math.round(58 * scale));
   return out;
 }
 
@@ -1037,6 +1175,23 @@ function refresh() {
   renderPreview();
 }
 
+function renderBrushRow() {
+  const row = document.getElementById('brushRow');
+  if (!row) return;
+  row.innerHTML = state.colors.map((c, i) =>
+    `<button type="button" class="brush-chip${i === state.brush ? ' selected' : ''}" data-i="${i}" style="background:${c}" aria-label="${colorNames()[i]}"></button>`
+  ).join('');
+}
+
+function syncBrushSelection() {
+  document.querySelectorAll('.swatch').forEach(el => {
+    el.classList.toggle('selected', Number(el.dataset.i) === state.brush);
+  });
+  document.querySelectorAll('#brushRow .brush-chip').forEach(el => {
+    el.classList.toggle('selected', Number(el.dataset.i) === state.brush);
+  });
+}
+
 function renderSwatches() {
   document.getElementById('swatches').innerHTML = state.colors.map((c, i) => `
     <div class="swatch ${i === state.brush ? 'selected' : ''}" data-i="${i}">
@@ -1045,14 +1200,18 @@ function renderSwatches() {
       <input class="hex" type="text" spellcheck="false" maxlength="7" value="${c}" data-color="${i}" aria-label="${colorNames()[i]}">
       <button type="button" class="edit-color" data-color="${i}" style="background:${c}" aria-label="${colorNames()[i]}"></button>
     </div>`).join('');
+  renderBrushRow();
 }
 
 function paintSwatch(i, hex) {
   const sw = document.querySelector(`.swatch[data-i="${i}"]`);
-  if (!sw) return;
-  sw.querySelector('.chip').style.background = hex;
-  sw.querySelector('.hex').value = hex;
-  sw.querySelector('.edit-color').style.background = hex;
+  if (sw) {
+    sw.querySelector('.chip').style.background = hex;
+    sw.querySelector('.hex').value = hex;
+    sw.querySelector('.edit-color').style.background = hex;
+  }
+  const chip = document.querySelector(`#brushRow .brush-chip[data-i="${i}"]`);
+  if (chip) chip.style.background = hex;
 }
 
 function setColor(i, hex, commit = true) {
@@ -1166,9 +1325,16 @@ document.getElementById('swatches').addEventListener('click', e => {
   if (!sw || e.target.matches('input')) return;
   const edit = e.target.closest('.edit-color');
   state.brush = Number(sw.dataset.i);
-  document.querySelectorAll('.swatch').forEach(el => el.classList.toggle('selected', el === sw));
+  syncBrushSelection();
   if (edit) openPicker(state.brush, edit);
   else closePicker();
+});
+
+document.getElementById('brushRow').addEventListener('click', e => {
+  const chip = e.target.closest('.brush-chip');
+  if (!chip) return;
+  state.brush = Number(chip.dataset.i);
+  syncBrushSelection();
 });
 
 document.getElementById('swatches').addEventListener('change', e => {
@@ -1629,16 +1795,69 @@ document.querySelectorAll('[data-arrange]').forEach(btn => {
   });
 });
 
+const mobileMq = window.matchMedia('(max-width: 800px)');
+const isMobileLayout = () => mobileMq.matches;
+
+function syncModePanels() {
+  const layout = document.getElementById('layoutPanel');
+  const paint = document.getElementById('paintPanel');
+  if (isMobileLayout()) {
+    layout.style.display = '';
+    paint.style.display = '';
+  } else {
+    layout.style.display = state.mode === 'layout' ? '' : 'none';
+    paint.style.display = state.mode === 'paint' ? '' : 'none';
+  }
+}
+
+function setMode(mode) {
+  state.mode = mode;
+  document.querySelectorAll('#modes [data-mode]').forEach(b => {
+    b.classList.toggle('active', b.dataset.mode === mode);
+  });
+  document.getElementById('modeHint').textContent = t('modeHint.' + mode);
+  canvas.style.cursor = mode === 'layout' ? 'move' : 'crosshair';
+  syncModePanels();
+  repaint();
+}
+
+function setMobilePane(pane) {
+  const current = document.querySelector('#mobilePanes button.active');
+  const collapse = current && current.dataset.pane === pane;
+  document.querySelectorAll('#mobilePanes button').forEach(b => {
+    const on = !collapse && b.dataset.pane === pane;
+    b.classList.toggle('active', on);
+    b.setAttribute('aria-expanded', String(on));
+  });
+  document.querySelectorAll('.pane').forEach(p => {
+    p.classList.toggle('is-open', !collapse && p.dataset.pane === pane);
+  });
+  if (collapse) return;
+  if (pane === 'layout') setMode('layout');
+  else if (pane === 'paint') setMode('paint');
+}
+
 document.getElementById('modes').addEventListener('click', e => {
   const btn = e.target.closest('button[data-mode]');
   if (!btn) return;
-  state.mode = btn.dataset.mode;
-  [...e.currentTarget.children].forEach(b => b.classList.toggle('active', b === btn));
-  document.getElementById('modeHint').textContent = t('modeHint.' + state.mode);
-  document.getElementById('layoutPanel').style.display = state.mode === 'layout' ? '' : 'none';
-  document.getElementById('paintPanel').style.display = state.mode === 'paint' ? '' : 'none';
-  canvas.style.cursor = state.mode === 'layout' ? 'move' : 'crosshair';
-  repaint();
+  setMode(btn.dataset.mode);
+});
+
+document.getElementById('mobilePanes').addEventListener('click', e => {
+  const btn = e.target.closest('button[data-pane]');
+  if (!btn) return;
+  setMobilePane(btn.dataset.pane);
+});
+
+mobileMq.addEventListener('change', () => {
+  if (!isMobileLayout()) {
+    document.querySelectorAll('#mobilePanes button').forEach(b => {
+      b.classList.remove('active');
+      b.setAttribute('aria-expanded', 'false');
+    });
+    document.querySelectorAll('.pane').forEach(p => p.classList.remove('is-open'));
+  }
+  syncModePanels();
 });
 
 document.getElementById('layoutTools').addEventListener('click', e => {
@@ -1676,6 +1895,32 @@ canvas.addEventListener('wheel', e => {
   syncCropControls();
   refresh();
 }, { passive: false });
+
+function pinchDist(e) {
+  const a = e.touches[0], b = e.touches[1];
+  return Math.hypot(a.clientX - b.clientX, a.clientY - b.clientY);
+}
+let pinch = null;
+canvas.addEventListener('touchstart', e => {
+  if (e.touches.length !== 2 || state.mode !== 'layout' || state.layoutTool !== 'crop') return;
+  const L = activeLayer();
+  if (!L) return;
+  e.preventDefault();
+  drag = null;
+  pinch = { dist: pinchDist(e), zoom: L.zoom };
+}, { passive: false });
+canvas.addEventListener('touchmove', e => {
+  if (!pinch || e.touches.length < 2) return;
+  const L = activeLayer();
+  if (!L) return;
+  e.preventDefault();
+  L.zoom = Math.min(4, Math.max(0.2, pinch.zoom * (pinchDist(e) / pinch.dist)));
+  syncCropControls();
+  refresh();
+}, { passive: false });
+canvas.addEventListener('touchend', e => {
+  if (e.touches.length < 2) pinch = null;
+});
 
 /* ---------- 图片载入 ---------- */
 const drop = document.getElementById('drop');
@@ -1740,7 +1985,18 @@ document.getElementById('download').addEventListener('click', () => {
 
 document.getElementById('print').addEventListener('click', () => {
   if (!state.grid) { alert(t('alertUploadFirst')); return; }
-  window.print();
+  const sheet = buildSheet();
+  const img = document.getElementById('printSheet');
+  let printed = false;
+  const go = () => {
+    if (printed) return;
+    printed = true;
+    img.onload = null;
+    window.print();
+  };
+  img.onload = go;
+  img.src = sheet.toDataURL('image/png');
+  if (img.complete) go();
 });
 
 function applyLang() {
@@ -1774,6 +2030,7 @@ document.getElementById('themeSwitch').addEventListener('click', e => {
 applyTheme();
 applyLang();
 syncSizeInputs();
+syncModePanels();
 canvas.style.cursor = 'move';
 </script>
 </body>
