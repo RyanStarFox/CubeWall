@@ -6,13 +6,13 @@
 
 图片只在浏览器里处理，不会上传到任何服务器。
 
-![中文界面示例](Examples/clawds_cn.png)
-
 ## 使用
 
 在线试用：https://cube.ryanstarfox.top
 
 也可以下载 `index.html`，双击用浏览器打开即可。没有构建步骤，不需要安装任何东西。
+
+![生成结果示例](Examples/clawds_cn.png)
 
 ## 功能
 
