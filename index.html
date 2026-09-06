@@ -614,6 +614,10 @@ function buildSheet() {
     c.fillText(text, x + 24, baseY + 32);
     x += 24 + c.measureText(text).width + 22;
   }
+
+  c.fillStyle = '#888';
+  c.font = '12px -apple-system, "PingFang SC", sans-serif';
+  c.fillText('github.com/RyanStarFox/CubeWall', pad, baseY + 58);
   return out;
 }
 
