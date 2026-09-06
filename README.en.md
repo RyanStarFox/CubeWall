@@ -6,13 +6,13 @@ Upload an image and get a build blueprint for a wall made of Rubik's cubes.
 
 Everything runs in your browser. Your images are never uploaded anywhere.
 
-![English UI example](Examples/clawds_en.png)
-
 ## Getting started
 
 Try it online: https://cube.ryanstarfox.top
 
 You can also download `index.html` and open it in a browser. No build step, nothing to install.
+
+![Output Example](Examples/clawds_en.png)
 
 ## Features
 
