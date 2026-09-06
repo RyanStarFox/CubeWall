@@ -10,7 +10,9 @@ Everything runs in your browser. Your images are never uploaded anywhere.
 
 ## Getting started
 
-Download `index.html` and open it in a browser. No build step, nothing to install.
+Try it online: https://cube.ryanstarfox.top
+
+You can also download `index.html` and open it in a browser. No build step, nothing to install.
 
 ## Features
 
