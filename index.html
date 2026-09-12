@@ -13,6 +13,9 @@
 <meta name="theme-color" content="#14161a" media="(prefers-color-scheme: dark)">
 <meta name="theme-color" content="#f3f4f6" media="(prefers-color-scheme: light)">
 <link rel="canonical" href="https://cube.ryanstarfox.top/">
+<link rel="alternate" hreflang="zh-CN" href="https://cube.ryanstarfox.top/">
+<link rel="alternate" hreflang="en" href="https://cube.ryanstarfox.top/?lang=en">
+<link rel="alternate" hreflang="x-default" href="https://cube.ryanstarfox.top/">
 <meta property="og:type" content="website">
 <meta property="og:site_name" content="魔方墙图纸生成器">
 <meta property="og:url" content="https://cube.ryanstarfox.top/">
@@ -55,6 +58,72 @@
   "codeRepository": "https://github.com/RyanStarFox/CubeWall",
   "license": "https://opensource.org/licenses/MIT"
 }
+</script>
+<script>
+window.__CW = {
+  site: 'https://cube.ryanstarfox.top',
+  seo: {
+    zh: {
+      title: '魔方墙图纸生成器',
+      metaTitle: '魔方墙图纸生成器 — 图片转魔方拼墙施工图',
+      metaDescription: '免费在线把图片转成魔方墙施工图纸。支持二至五阶与自定义阶数，六色量化、多图拼接、手动上色。图片只在浏览器本地处理，可下载 PNG 或打印。',
+      metaKeywords: '魔方墙,魔方拼图,魔方马赛克,施工图纸,图片转魔方,三阶魔方,六色贴纸,cube mosaic',
+      ogImageAlt: '魔方墙图纸生成器：把图片转成魔方拼墙施工图纸',
+    },
+    en: {
+      title: 'Cube Wall Blueprint',
+      metaTitle: 'Cube Wall Blueprint Generator — Image to Rubik\'s Cube Mosaic',
+      metaDescription: 'Turn any image into a Rubik\'s cube mosaic blueprint. Choose 2×2–5×5 cubes, quantize to six colours, paint by hand. Free in your browser — download or print.',
+      metaKeywords: 'cube wall, rubik\'s cube mosaic, cube mosaic generator, sticker mosaic, 3x3 cube art, blueprint',
+      ogImageAlt: 'Cube Wall Blueprint Generator: turn an image into a cube mosaic',
+    },
+  },
+};
+(function () {
+  var C = window.__CW;
+  var q = new URLSearchParams(location.search).get('lang');
+  var lang = (q === 'en' || q === 'zh') ? q : '';
+  if (!lang) {
+    try {
+      var saved = localStorage.getItem('cubewall.lang.v1');
+      if (saved === 'en' || saved === 'zh') lang = saved;
+    } catch (e) { /* 隐私模式：只看网址 */ }
+  }
+  if (lang !== 'en') lang = 'zh';
+  var pack = C.seo[lang];
+  var url = lang === 'en' ? C.site + '/?lang=en' : C.site + '/';
+  document.documentElement.lang = lang === 'zh' ? 'zh-CN' : 'en';
+  document.title = pack.metaTitle;
+  function set(sel, val) {
+    var el = document.querySelector(sel);
+    if (el) el.setAttribute('content', val);
+  }
+  set('meta[name="description"]', pack.metaDescription);
+  set('meta[name="keywords"]', pack.metaKeywords);
+  set('meta[name="application-name"]', pack.title);
+  set('meta[property="og:title"]', pack.metaTitle);
+  set('meta[property="og:description"]', pack.metaDescription);
+  set('meta[property="og:site_name"]', pack.title);
+  set('meta[property="og:locale"]', lang === 'zh' ? 'zh_CN' : 'en_US');
+  set('meta[property="og:locale:alternate"]', lang === 'zh' ? 'en_US' : 'zh_CN');
+  set('meta[property="og:url"]', url);
+  set('meta[property="og:image:alt"]', pack.ogImageAlt);
+  set('meta[name="twitter:title"]', pack.metaTitle);
+  set('meta[name="twitter:description"]', pack.metaDescription);
+  set('meta[name="twitter:image:alt"]', pack.ogImageAlt);
+  var can = document.querySelector('link[rel="canonical"]');
+  if (can) can.setAttribute('href', url);
+  var ld = document.getElementById('jsonld');
+  if (ld) {
+    try {
+      var data = JSON.parse(ld.textContent);
+      data.name = pack.title;
+      data.description = pack.metaDescription;
+      data.url = url;
+      ld.textContent = JSON.stringify(data);
+    } catch (e) { /* 保持静态 JSON-LD */ }
+  }
+})();
 </script>
 <!-- 图标内嵌为 data URI，保证单个 HTML 文件拿到哪都能显示。
      小尺寸用正面 3×3 平面图：四颗魔方的立体图在 16px 下会糊成一团。 -->
@@ -167,11 +236,13 @@
   }
   #langSwitch { flex: 2; }
   #themeSwitch { flex: 3; }
-  .lang button {
+  .lang button, .lang a {
     flex: 1; min-width: 0; padding: 3px 4px; font-size: 11px; line-height: 1.3;
     border: none; border-radius: 0; background: transparent; text-align: center;
+    color: inherit; text-decoration: none;
+    display: flex; align-items: center; justify-content: center;
   }
-  .lang button.active { background: var(--accent); color: var(--on-accent); font-weight: 600; }
+  .lang button.active, .lang a.active { background: var(--accent); color: var(--on-accent); font-weight: 600; }
   .brand .gh {
     display: flex; align-items: center; justify-content: center;
     color: var(--muted); flex-shrink: 0;
@@ -357,7 +428,7 @@
       padding: 0 16px 16px;
       background: var(--panel);
     }
-    .lang button { padding: 8px 4px; min-height: 36px; }
+    .lang button, .lang a { padding: 8px 4px; min-height: 36px; }
     button { min-height: 40px; }
     .layer button { min-width: 36px; min-height: 36px; padding: 6px; }
     input[type="number"], select, .swatch .hex { font-size: 16px; }
@@ -382,7 +453,9 @@
 </head>
 <body>
 <noscript>
-  <p>魔方墙图纸生成器：把任意图片转成用魔方拼成一面墙的施工图纸。图片只在浏览器本地处理。请启用 JavaScript 后使用。源码见 https://github.com/RyanStarFox/CubeWall</p>
+  <p lang="zh">魔方墙图纸生成器：把任意图片转成用魔方拼成一面墙的施工图纸。图片只在浏览器本地处理。请启用 JavaScript 后使用。</p>
+  <p lang="en">Cube Wall Blueprint Generator: turn any image into a Rubik’s cube mosaic blueprint. Images stay on this device. Enable JavaScript to use the tool.</p>
+  <p><a href="./" hreflang="zh-CN">中文</a> · <a href="./?lang=en" hreflang="en">English</a> · <a href="https://github.com/RyanStarFox/CubeWall">GitHub</a></p>
 </noscript>
 <div class="app">
   <aside class="controls">
@@ -393,8 +466,8 @@
       </a>
       <div class="brand-tools">
         <div class="lang" id="langSwitch">
-          <button type="button" data-lang="zh" class="active">中</button>
-          <button type="button" data-lang="en">EN</button>
+          <a href="./" hreflang="zh-CN" data-lang="zh" class="active">中</a>
+          <a href="./?lang=en" hreflang="en" data-lang="en">EN</a>
         </div>
         <div class="lang" id="themeSwitch">
           <button type="button" data-theme="auto" class="active" data-i18n="themeAuto">自动</button>
@@ -568,10 +641,6 @@ const UI_FONT = 'system-ui, -apple-system, "Segoe UI", Roboto, "Helvetica Neue",
 const I18N = {
   zh: {
     title: '魔方墙图纸生成器',
-    metaTitle: '魔方墙图纸生成器 — 图片转魔方拼墙施工图',
-    metaDescription: '免费在线把图片转成魔方墙施工图纸。支持二至五阶与自定义阶数，六色量化、多图拼接、手动上色。图片只在浏览器本地处理，可下载 PNG 或打印。',
-    metaKeywords: '魔方墙,魔方拼图,魔方马赛克,施工图纸,图片转魔方,三阶魔方,六色贴纸,cube mosaic',
-    ogImageAlt: '魔方墙图纸生成器：把图片转成魔方拼墙施工图纸',
     github: '在 GitHub 上查看源码',
     settings: '设置',
     paneLayout: '布局',
@@ -652,10 +721,6 @@ const I18N = {
   },
   en: {
     title: 'Cube Wall Blueprint',
-    metaTitle: 'Cube Wall Blueprint Generator — Image to Rubik\'s Cube Mosaic',
-    metaDescription: 'Turn any image into a Rubik\'s cube mosaic blueprint. Choose 2×2–5×5 cubes, quantize to six colours, paint by hand. Free in your browser — download or print.',
-    metaKeywords: 'cube wall, rubik\'s cube mosaic, cube mosaic generator, sticker mosaic, 3x3 cube art, blueprint',
-    ogImageAlt: 'Cube Wall Blueprint Generator: turn an image into a cube mosaic',
     github: 'View source on GitHub',
     settings: 'Settings',
     paneLayout: 'Layout',
@@ -737,11 +802,13 @@ const I18N = {
 };
 
 function detectLang() {
+  const q = new URLSearchParams(location.search).get('lang');
+  if (q === 'zh' || q === 'en') return q;
   try {
     const saved = localStorage.getItem(LANG_KEY);
     if (saved === 'zh' || saved === 'en') return saved;
-  } catch { /* 隐私模式：只看浏览器语言 */ }
-  return (navigator.language || '').toLowerCase().startsWith('zh') ? 'zh' : 'en';
+  } catch { /* 隐私模式：默认中文，避免爬虫把首页收成英文 */ }
+  return 'zh';
 }
 
 let lang = detectLang();
@@ -754,33 +821,55 @@ function t(key, vars) {
 
 const colorNames = () => t('colorList').split(',');
 
+function seoPack() {
+  return window.__CW?.seo?.[lang] ?? window.__CW?.seo?.zh ?? { title: t('title'), metaTitle: t('title'), metaDescription: '', metaKeywords: '', ogImageAlt: t('title') };
+}
+
+function pageAbsUrl(l = lang) {
+  const site = window.__CW?.site || 'https://cube.ryanstarfox.top';
+  return l === 'en' ? site + '/?lang=en' : site + '/';
+}
+
+function syncLangUrl() {
+  const url = new URL(location.href);
+  if (lang === 'en') url.searchParams.set('lang', 'en');
+  else url.searchParams.delete('lang');
+  const next = url.pathname + url.search + url.hash;
+  const cur = location.pathname + location.search + location.hash;
+  if (next !== cur) history.replaceState(null, '', next);
+}
+
 function setMeta(selector, value) {
   const el = document.querySelector(selector);
   if (el) el.setAttribute('content', value);
 }
 
 function applySeo() {
-  const title = t('metaTitle');
-  const desc = t('metaDescription');
-  const imgAlt = t('ogImageAlt');
-  document.title = title;
-  setMeta('meta[name="description"]', desc);
-  setMeta('meta[name="keywords"]', t('metaKeywords'));
-  setMeta('meta[name="application-name"]', t('title'));
-  setMeta('meta[property="og:title"]', title);
-  setMeta('meta[property="og:description"]', desc);
-  setMeta('meta[property="og:site_name"]', t('title'));
+  const pack = seoPack();
+  const url = pageAbsUrl();
+  document.title = pack.metaTitle;
+  setMeta('meta[name="description"]', pack.metaDescription);
+  setMeta('meta[name="keywords"]', pack.metaKeywords);
+  setMeta('meta[name="application-name"]', pack.title);
+  setMeta('meta[property="og:title"]', pack.metaTitle);
+  setMeta('meta[property="og:description"]', pack.metaDescription);
+  setMeta('meta[property="og:site_name"]', pack.title);
   setMeta('meta[property="og:locale"]', lang === 'zh' ? 'zh_CN' : 'en_US');
-  setMeta('meta[property="og:image:alt"]', imgAlt);
-  setMeta('meta[name="twitter:title"]', title);
-  setMeta('meta[name="twitter:description"]', desc);
-  setMeta('meta[name="twitter:image:alt"]', imgAlt);
+  setMeta('meta[property="og:locale:alternate"]', lang === 'zh' ? 'en_US' : 'zh_CN');
+  setMeta('meta[property="og:url"]', url);
+  setMeta('meta[property="og:image:alt"]', pack.ogImageAlt);
+  setMeta('meta[name="twitter:title"]', pack.metaTitle);
+  setMeta('meta[name="twitter:description"]', pack.metaDescription);
+  setMeta('meta[name="twitter:image:alt"]', pack.ogImageAlt);
+  const can = document.querySelector('link[rel="canonical"]');
+  if (can) can.setAttribute('href', url);
   const ldEl = document.getElementById('jsonld');
   if (!ldEl) return;
   try {
     const data = JSON.parse(ldEl.textContent);
-    data.name = t('title');
-    data.description = desc;
+    data.name = pack.title;
+    data.description = pack.metaDescription;
+    data.url = url;
     ldEl.textContent = JSON.stringify(data);
   } catch { /* 结构化数据保持页面里的静态默认值 */ }
 }
@@ -790,7 +879,7 @@ function applyStaticLang() {
   applySeo();
   document.querySelectorAll('[data-i18n]').forEach(el => { el.textContent = t(el.dataset.i18n); });
   document.querySelectorAll('[data-i18n-title]').forEach(el => { el.title = t(el.dataset.i18nTitle); });
-  document.querySelectorAll('#langSwitch button').forEach(b => {
+  document.querySelectorAll('#langSwitch [data-lang]').forEach(b => {
     b.classList.toggle('active', b.dataset.lang === lang);
   });
   syncThemeButton();
@@ -2022,10 +2111,21 @@ function applyLang() {
 }
 
 document.getElementById('langSwitch').addEventListener('click', e => {
-  const btn = e.target.closest('button[data-lang]');
-  if (!btn || btn.dataset.lang === lang) return;
+  const btn = e.target.closest('[data-lang]');
+  if (!btn) return;
+  e.preventDefault();
+  if (btn.dataset.lang === lang) return;
   lang = btn.dataset.lang;
   try { localStorage.setItem(LANG_KEY, lang); } catch { /* 隐私模式：仅本次会话 */ }
+  syncLangUrl();
+  applyLang();
+});
+
+window.addEventListener('popstate', () => {
+  const q = new URLSearchParams(location.search).get('lang');
+  const next = q === 'en' ? 'en' : 'zh';
+  if (next === lang) return;
+  lang = next;
   applyLang();
 });
 
@@ -2039,6 +2139,7 @@ document.getElementById('themeSwitch').addEventListener('click', e => {
 /* ---------- 启动 ---------- */
 applyTheme();
 applyLang();
+syncLangUrl();
 syncSizeInputs();
 setPane('setup');
 canvas.style.cursor = 'move';

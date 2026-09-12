@@ -8,7 +8,7 @@
 
 ## 使用
 
-在线试用：https://cube.ryanstarfox.top
+在线试用：https://cube.ryanstarfox.top （[English](https://cube.ryanstarfox.top/?lang=en)）
 
 也可以下载 `index.html`，双击用浏览器打开即可。没有构建步骤，不需要安装任何东西。
 

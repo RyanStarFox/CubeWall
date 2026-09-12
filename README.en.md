@@ -8,7 +8,7 @@ Everything runs in your browser. Your images are never uploaded anywhere.
 
 ## Getting started
 
-Try it online: https://cube.ryanstarfox.top
+Try it online: https://cube.ryanstarfox.top/?lang=en ([中文](https://cube.ryanstarfox.top/))
 
 You can also download `index.html` and open it in a browser. No build step, nothing to install.
 
