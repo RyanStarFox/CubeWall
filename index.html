@@ -3,7 +3,59 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
-<title>魔方墙图纸生成器</title>
+<title>魔方墙图纸生成器 — 图片转魔方拼墙施工图</title>
+<meta name="description" content="免费在线把图片转成魔方墙施工图纸。支持二至五阶与自定义阶数，六色量化、多图拼接、手动上色。图片只在浏览器本地处理，可下载 PNG 或打印。">
+<meta name="keywords" content="魔方墙,魔方拼图,魔方马赛克,施工图纸,图片转魔方,三阶魔方,六色贴纸,cube mosaic">
+<meta name="author" content="RyanStarFox">
+<meta name="robots" content="index, follow, max-image-preview:large, max-snippet:-1">
+<meta name="application-name" content="魔方墙图纸生成器">
+<meta name="apple-mobile-web-app-title" content="魔方墙图纸">
+<meta name="theme-color" content="#14161a" media="(prefers-color-scheme: dark)">
+<meta name="theme-color" content="#f3f4f6" media="(prefers-color-scheme: light)">
+<link rel="canonical" href="https://cube.ryanstarfox.top/">
+<meta property="og:type" content="website">
+<meta property="og:site_name" content="魔方墙图纸生成器">
+<meta property="og:url" content="https://cube.ryanstarfox.top/">
+<meta property="og:title" content="魔方墙图纸生成器 — 图片转魔方拼墙施工图">
+<meta property="og:description" content="免费在线把图片转成魔方墙施工图纸。支持二至五阶与自定义阶数，六色量化、多图拼接、手动上色。图片只在浏览器本地处理，可下载 PNG 或打印。">
+<meta property="og:image" content="https://cube.ryanstarfox.top/og-image.png">
+<meta property="og:image:type" content="image/png">
+<meta property="og:image:width" content="1200">
+<meta property="og:image:height" content="630">
+<meta property="og:image:alt" content="魔方墙图纸生成器：把图片转成魔方拼墙施工图纸">
+<meta property="og:locale" content="zh_CN">
+<meta property="og:locale:alternate" content="en_US">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:title" content="魔方墙图纸生成器 — 图片转魔方拼墙施工图">
+<meta name="twitter:description" content="免费在线把图片转成魔方墙施工图纸。支持二至五阶与自定义阶数，六色量化、多图拼接、手动上色。图片只在浏览器本地处理，可下载 PNG 或打印。">
+<meta name="twitter:image" content="https://cube.ryanstarfox.top/og-image.png">
+<meta name="twitter:image:alt" content="魔方墙图纸生成器：把图片转成魔方拼墙施工图纸">
+<script type="application/ld+json" id="jsonld">
+{
+  "@context": "https://schema.org",
+  "@type": "WebApplication",
+  "name": "魔方墙图纸生成器",
+  "alternateName": "Cube Wall Blueprint Generator",
+  "url": "https://cube.ryanstarfox.top/",
+  "description": "免费在线把图片转成魔方墙施工图纸。支持二至五阶与自定义阶数，六色量化、多图拼接、手动上色。图片只在浏览器本地处理，可下载 PNG 或打印。",
+  "applicationCategory": "DesignApplication",
+  "operatingSystem": "Any",
+  "inLanguage": ["zh-CN", "en"],
+  "image": "https://cube.ryanstarfox.top/og-image.png",
+  "offers": {
+    "@type": "Offer",
+    "price": "0",
+    "priceCurrency": "CNY"
+  },
+  "author": {
+    "@type": "Person",
+    "name": "RyanStarFox",
+    "url": "https://github.com/RyanStarFox"
+  },
+  "codeRepository": "https://github.com/RyanStarFox/CubeWall",
+  "license": "https://opensource.org/licenses/MIT"
+}
+</script>
 <!-- 图标内嵌为 data URI，保证单个 HTML 文件拿到哪都能显示。
      小尺寸用正面 3×3 平面图：四颗魔方的立体图在 16px 下会糊成一团。 -->
 <link rel="icon" type="image/png" sizes="16x16" href="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABAAAAAQCAYAAAAf8/9hAAACuElEQVR42lWTz2tUVxTHP+fe++a91zEzjJnUGCGTtEYjFCK4EkuhULrtwmVpu6iL4B/gwp3YVSnUQikt3fcXdFcEQbroRrBFEWqsJo72R5raiXkamZk3effe4yJJqx848OV7Vofv9wi75EyhuG3dgqLgefY/o22Av1YBBGC81bowY7P3EkRExPwx6rN3tsOL7TYAvd4GjzdWODgLEomVF27etV+trxenIefA0fHJ6mrnVb3SOaE3O6/p2X2H9erSr7rLL9e7+sW5XHUN1Vui2kVfP95Q2DfrUFwq0vfERqmqDiR1CVYM3lcAGBHyzFINBD8UTYxKXtMBBOcAFRHTFCepRppiJUVoNJs4lwDQaDbJUyXZqySiUEfEYkDUZXnG31slX9sezhgyMVze7NH79HOOvTIPwLUbXe5dq6hcShwKPgSW70OagmsNYWMq44P3D4MB8gR+THlHzjOXAxFowEfdt/n+27cg9AGh3v+QBks4yhJpZpiXJpCRR+sp6UzBGycMU0cNBGFmPDJ2aZrBgVnEF6irY9da8IDt3AUQaxEbwVowBg0RQoQgEJSoEFRgZ3SnEY4sIzwaEK6vgBHIHcNba/w05ThSB6KwvKTEf3/HJcsQBoAgww1IU1wB7NeMM9MnqeUpIoYf9lzkypd38JcEVLn9D9D4GXukB1UE75GVHiPAlWXJwUNzLC4u/lfUVqPJ/CffMd8xECNFDT5+eZrRm4fgyRDyGrUbq2Sr6zhANGqsvNfgK7XWMRwM2AxQVQJReBwUUwV4soX0K1UPqEYFcYAvy7KeOCeJcwKwFQKikLjtGA0QgkLu0OCExCI+1i14AWi3258tLCy8W6vVUFWzfLfL2OYak3u2T3o4gN/MCzA5BhAlRMyfxTePHhan5JkfnWEnVgDSCRj9v5xgk13DQHgA9wCeAv7jKkITlcTfAAAAAElFTkSuQmCC">
@@ -125,6 +177,7 @@
     color: var(--muted); flex-shrink: 0;
   }
   .brand .gh:hover { color: var(--accent); }
+  noscript p { margin: 0; padding: 12px 16px; background: var(--panel); color: var(--text); }
   h1 { font-size: 16px; margin: 0; letter-spacing: .5px; }
   h2 { font-size: 12px; margin: 0 0 8px; color: var(--muted); font-weight: 600; letter-spacing: .08em; }
   .group { border-top: 1px solid var(--line); padding-top: 16px; }
@@ -328,6 +381,9 @@
 </style>
 </head>
 <body>
+<noscript>
+  <p>魔方墙图纸生成器：把任意图片转成用魔方拼成一面墙的施工图纸。图片只在浏览器本地处理。请启用 JavaScript 后使用。源码见 https://github.com/RyanStarFox/CubeWall</p>
+</noscript>
 <div class="app">
   <aside class="controls">
     <div class="brand">
@@ -512,6 +568,10 @@ const UI_FONT = 'system-ui, -apple-system, "Segoe UI", Roboto, "Helvetica Neue",
 const I18N = {
   zh: {
     title: '魔方墙图纸生成器',
+    metaTitle: '魔方墙图纸生成器 — 图片转魔方拼墙施工图',
+    metaDescription: '免费在线把图片转成魔方墙施工图纸。支持二至五阶与自定义阶数，六色量化、多图拼接、手动上色。图片只在浏览器本地处理，可下载 PNG 或打印。',
+    metaKeywords: '魔方墙,魔方拼图,魔方马赛克,施工图纸,图片转魔方,三阶魔方,六色贴纸,cube mosaic',
+    ogImageAlt: '魔方墙图纸生成器：把图片转成魔方拼墙施工图纸',
     github: '在 GitHub 上查看源码',
     settings: '设置',
     paneLayout: '布局',
@@ -592,6 +652,10 @@ const I18N = {
   },
   en: {
     title: 'Cube Wall Blueprint',
+    metaTitle: 'Cube Wall Blueprint Generator — Image to Rubik\'s Cube Mosaic',
+    metaDescription: 'Turn any image into a Rubik\'s cube mosaic blueprint. Choose 2×2–5×5 cubes, quantize to six colours, paint by hand. Free in your browser — download or print.',
+    metaKeywords: 'cube wall, rubik\'s cube mosaic, cube mosaic generator, sticker mosaic, 3x3 cube art, blueprint',
+    ogImageAlt: 'Cube Wall Blueprint Generator: turn an image into a cube mosaic',
     github: 'View source on GitHub',
     settings: 'Settings',
     paneLayout: 'Layout',
@@ -690,9 +754,40 @@ function t(key, vars) {
 
 const colorNames = () => t('colorList').split(',');
 
+function setMeta(selector, value) {
+  const el = document.querySelector(selector);
+  if (el) el.setAttribute('content', value);
+}
+
+function applySeo() {
+  const title = t('metaTitle');
+  const desc = t('metaDescription');
+  const imgAlt = t('ogImageAlt');
+  document.title = title;
+  setMeta('meta[name="description"]', desc);
+  setMeta('meta[name="keywords"]', t('metaKeywords'));
+  setMeta('meta[name="application-name"]', t('title'));
+  setMeta('meta[property="og:title"]', title);
+  setMeta('meta[property="og:description"]', desc);
+  setMeta('meta[property="og:site_name"]', t('title'));
+  setMeta('meta[property="og:locale"]', lang === 'zh' ? 'zh_CN' : 'en_US');
+  setMeta('meta[property="og:image:alt"]', imgAlt);
+  setMeta('meta[name="twitter:title"]', title);
+  setMeta('meta[name="twitter:description"]', desc);
+  setMeta('meta[name="twitter:image:alt"]', imgAlt);
+  const ldEl = document.getElementById('jsonld');
+  if (!ldEl) return;
+  try {
+    const data = JSON.parse(ldEl.textContent);
+    data.name = t('title');
+    data.description = desc;
+    ldEl.textContent = JSON.stringify(data);
+  } catch { /* 结构化数据保持页面里的静态默认值 */ }
+}
+
 function applyStaticLang() {
   document.documentElement.lang = lang === 'zh' ? 'zh-CN' : 'en';
-  document.title = t('title');
+  applySeo();
   document.querySelectorAll('[data-i18n]').forEach(el => { el.textContent = t(el.dataset.i18n); });
   document.querySelectorAll('[data-i18n-title]').forEach(el => { el.title = t(el.dataset.i18nTitle); });
   document.querySelectorAll('#langSwitch button').forEach(b => {
