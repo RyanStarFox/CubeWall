@@ -466,8 +466,8 @@ window.__CW = {
       </a>
       <div class="brand-tools">
         <div class="lang" id="langSwitch">
-          <a href="./" hreflang="zh-CN" data-lang="zh" class="active">中</a>
-          <a href="./?lang=en" hreflang="en" data-lang="en">EN</a>
+          <button type="button" data-lang="zh" class="active">中</button>
+          <button type="button" data-lang="en">EN</button>
         </div>
         <div class="lang" id="themeSwitch">
           <button type="button" data-theme="auto" class="active" data-i18n="themeAuto">自动</button>
@@ -620,7 +620,7 @@ window.__CW = {
 
   <main class="stage">
     <div class="sheet-title" id="sheetTitle"></div>
-    <div class="meta" id="meta" data-i18n="noImage">还没有图片。</div>
+    <div class="meta" id="meta">还没有图片。</div>
     <div id="canvasWrap" hidden><canvas id="preview"></canvas></div>
     <div class="empty" id="empty" data-i18n="empty">拖入一张图片开始</div>
     <img id="printSheet" alt="">
@@ -883,6 +883,48 @@ function applyStaticLang() {
     b.classList.toggle('active', b.dataset.lang === lang);
   });
   syncThemeButton();
+}
+
+function relabelPalette() {
+  const names = colorNames();
+  document.querySelectorAll('#swatches .swatch').forEach(el => {
+    const name = names[Number(el.dataset.i)] ?? '';
+    const nameEl = el.querySelector('.name');
+    if (nameEl) nameEl.textContent = name;
+    const hex = el.querySelector('.hex');
+    if (hex) hex.setAttribute('aria-label', name);
+    const edit = el.querySelector('.edit-color');
+    if (edit) edit.setAttribute('aria-label', name);
+  });
+  document.querySelectorAll('#brushRow .brush-chip').forEach(el => {
+    el.setAttribute('aria-label', names[Number(el.dataset.i)] ?? '');
+  });
+  document.querySelectorAll('#padColor option').forEach(opt => {
+    opt.textContent = names[Number(opt.value)] ?? opt.textContent;
+  });
+}
+
+function relabelLayerButtons() {
+  document.querySelectorAll('#layerList [data-act="up"]').forEach(b => { b.title = t('layerUp'); });
+  document.querySelectorAll('#layerList [data-act="down"]').forEach(b => { b.title = t('layerDown'); });
+  document.querySelectorAll('#layerList [data-act="del"]').forEach(b => { b.title = t('layerDel'); });
+}
+
+function relabelPreview() {
+  const W = gridW(), H = gridH();
+  document.getElementById('cubeInfo').textContent = t('cubeInfo', {
+    w: W, h: H, cx: state.cubesX, cy: state.cubesY, n: state.cubesX * state.cubesY,
+  });
+  if (!state.grid) {
+    document.getElementById('meta').textContent = t('noImage');
+    return;
+  }
+  document.getElementById('meta').textContent = t('meta', {
+    src: sourceLabel() || t('noImage'), w: W, h: H, order: state.order, n: state.cubesX * state.cubesY,
+  });
+  document.getElementById('sheetTitle').textContent = t('sheetTitle', {
+    cx: state.cubesX, cy: state.cubesY, order: state.order,
+  });
 }
 
 function loadThemePref() {
@@ -1567,7 +1609,9 @@ document.getElementById('fitMode').addEventListener('change', e => {
 });
 
 document.getElementById('padColor').addEventListener('change', e => {
-  state.padColor = Number(e.target.value);
+  const next = Number(e.target.value);
+  if (!Number.isFinite(next) || next === state.padColor) return;
+  state.padColor = next;
   refresh();
 });
 
@@ -2099,22 +2143,26 @@ document.getElementById('print').addEventListener('click', () => {
   if (img.complete) go();
 });
 
-function applyLang() {
+function applyLang({ full = false } = {}) {
   applyStaticLang();
-  renderSwatches();
-  renderPadOptions();
-  renderLayers();
+  if (full) {
+    renderSwatches();
+    renderPadOptions();
+    renderLayers();
+    renderPreview();
+  } else {
+    relabelPalette();
+    relabelLayerButtons();
+    relabelPreview();
+  }
   document.getElementById('toolHint').textContent = t('toolHint.' + state.tool);
   document.getElementById('fitHint').textContent = t('fitHint.' + state.fitMode);
   document.getElementById('ltoolHint').textContent = t('ltoolHint.' + state.layoutTool);
-  renderPreview();
 }
 
 document.getElementById('langSwitch').addEventListener('click', e => {
-  const btn = e.target.closest('[data-lang]');
-  if (!btn) return;
-  e.preventDefault();
-  if (btn.dataset.lang === lang) return;
+  const btn = e.target.closest('button[data-lang]');
+  if (!btn || btn.dataset.lang === lang) return;
   lang = btn.dataset.lang;
   try { localStorage.setItem(LANG_KEY, lang); } catch { /* 隐私模式：仅本次会话 */ }
   syncLangUrl();
@@ -2138,7 +2186,7 @@ document.getElementById('themeSwitch').addEventListener('click', e => {
 
 /* ---------- 启动 ---------- */
 applyTheme();
-applyLang();
+applyLang({ full: true });
 syncLangUrl();
 syncSizeInputs();
 setPane('setup');
