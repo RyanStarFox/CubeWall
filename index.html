@@ -288,6 +288,7 @@ window.__CW = {
   }
   .drop.over { border-color: var(--accent); color: var(--accent); }
   .hint { font-size: 12px; color: var(--muted); }
+  .visit-count { margin: 8px 0 0; text-align: center; font-variant-numeric: tabular-nums; }
   .swatches { display: grid; grid-template-columns: repeat(3, 1fr); gap: 8px; }
   .swatch {
     position: relative;
@@ -615,6 +616,11 @@ window.__CW = {
         <button class="primary" id="download" data-i18n="download">下载 PNG</button>
         <button id="print" data-i18n="print">打印</button>
       </div>
+      <p class="hint visit-count">
+        <span data-i18n="visitPvPrefix">访问 </span><span id="busuanzi_value_site_pv">–</span><span data-i18n="visitPvSuffix"> 次</span>
+        ·
+        <span data-i18n="visitUvPrefix">访客 </span><span id="busuanzi_value_site_uv">–</span><span data-i18n="visitUvSuffix"> 人</span>
+      </p>
     </div>
   </aside>
 
@@ -691,6 +697,10 @@ const I18N = {
     dither: '抖动强度',
     ditherHint: '0% = 纯色块，边界干净；越高层次越丰富但杂点越多。色块图建议 0%，照片 40–60%。',
     download: '下载 PNG',
+    visitPvPrefix: '访问 ',
+    visitPvSuffix: ' 次',
+    visitUvPrefix: '访客 ',
+    visitUvSuffix: ' 人',
     print: '打印',
     noImage: '还没有图片。',
     empty: '拖入一张图片开始',
@@ -771,6 +781,10 @@ const I18N = {
     dither: 'Dither',
     ditherHint: '0% = flat blocks, clean edges. Higher values add detail but more noise. Use 0% for graphics, 40–60% for photos.',
     download: 'Download PNG',
+    visitPvPrefix: '',
+    visitPvSuffix: ' views',
+    visitUvPrefix: '',
+    visitUvSuffix: ' visitors',
     print: 'Print',
     noImage: 'No image yet.',
     empty: 'Drop an image to start',
@@ -2192,5 +2206,6 @@ syncSizeInputs();
 setPane('setup');
 canvas.style.cursor = 'move';
 </script>
+<script defer src="https://vercount.one/js"></script>
 </body>
 </html>
