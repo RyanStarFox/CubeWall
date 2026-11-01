@@ -13,9 +13,6 @@
 <meta name="theme-color" content="#14161a" media="(prefers-color-scheme: dark)">
 <meta name="theme-color" content="#f3f4f6" media="(prefers-color-scheme: light)">
 <link rel="canonical" href="https://cube.ryanstarfox.top/">
-<link rel="alternate" hreflang="zh-CN" href="https://cube.ryanstarfox.top/">
-<link rel="alternate" hreflang="en" href="https://cube.ryanstarfox.top/?lang=en">
-<link rel="alternate" hreflang="x-default" href="https://cube.ryanstarfox.top/">
 <meta property="og:type" content="website">
 <meta property="og:site_name" content="魔方墙图纸生成器">
 <meta property="og:url" content="https://cube.ryanstarfox.top/">
@@ -91,7 +88,7 @@ window.__CW = {
   }
   if (lang !== 'en') lang = 'zh';
   var pack = C.seo[lang];
-  var url = lang === 'en' ? C.site + '/?lang=en' : C.site + '/';
+  var url = String(C.site || 'https://cube.ryanstarfox.top').replace(/\/+$/, '') + '/';
   document.documentElement.lang = lang === 'zh' ? 'zh-CN' : 'en';
   document.title = pack.metaTitle;
   function set(sel, val) {
@@ -248,6 +245,9 @@ window.__CW = {
     color: var(--muted); flex-shrink: 0;
   }
   .brand .gh:hover { color: var(--accent); }
+  .guide summary { cursor: pointer; color: var(--text); font-size: 13px; }
+  .guide p, .guide li { margin: 8px 0 0; color: var(--muted); font-size: 12px; }
+  .guide ol { margin: 0; padding-left: 18px; }
   noscript p { margin: 0; padding: 12px 16px; background: var(--panel); color: var(--text); }
   h1 { font-size: 16px; margin: 0; letter-spacing: .5px; }
   h2 { font-size: 12px; margin: 0 0 8px; color: var(--muted); font-weight: 600; letter-spacing: .08em; }
@@ -486,6 +486,19 @@ window.__CW = {
       <input type="file" id="file" accept="image/*" multiple hidden>
     </div>
 
+    <details class="group guide">
+      <summary data-i18n="guideSummary">使用说明</summary>
+      <p data-i18n="guideLead">把一张图片转成用多颗魔方拼成的墙，并导出带编号的施工图。图片只在这台设备上处理，不会上传。</p>
+      <ol>
+        <li data-i18n="guideStep1">拖入或选择图片。可以一次加多张，再在「布局」里排列。</li>
+        <li data-i18n="guideStep2">选择魔方阶数和墙的宽高。格子数会自动对齐到阶数的倍数，并显示需要多少颗魔方。</li>
+        <li data-i18n="guideStep3">需要改个别格子时打开「上色」。确认后下载 PNG，或直接打印。</li>
+      </ol>
+      <h2 data-i18n="guideFaqTitle">常见问题</h2>
+      <p data-i18n="guideFaqLocal">图片不会离开浏览器。刷新或关闭页面后，未下载的图纸不会保存在服务器上。</p>
+      <p data-i18n="guideFaqCount">用量按当前宽高和阶数计算。例如 30×30 贴纸、三阶，就是 10×10 共 100 颗魔方。</p>
+    </details>
+
     <div class="lang panes" id="paneTabs" role="tablist">
       <button type="button" data-pane="setup" class="active" data-i18n="settings" aria-controls="paneSetup" aria-expanded="true">设置</button>
       <button type="button" data-pane="layout" data-i18n="paneLayout" aria-controls="paneLayout" aria-expanded="false">布局</button>
@@ -655,6 +668,14 @@ const I18N = {
     themeDark: '深色',
     dropTitle: '拖入图片，或点击选择',
     dropHint: '可一次选多张，图片只在本机处理',
+    guideSummary: '使用说明',
+    guideLead: '把一张图片转成用多颗魔方拼成的墙，并导出带编号的施工图。图片只在这台设备上处理，不会上传。',
+    guideStep1: '拖入或选择图片。可以一次加多张，再在「布局」里排列。',
+    guideStep2: '选择魔方阶数和墙的宽高。格子数会自动对齐到阶数的倍数，并显示需要多少颗魔方。',
+    guideStep3: '需要改个别格子时打开「上色」。确认后下载 PNG，或直接打印。',
+    guideFaqTitle: '常见问题',
+    guideFaqLocal: '图片不会离开浏览器。刷新或关闭页面后，未下载的图纸不会保存在服务器上。',
+    guideFaqCount: '用量按当前宽高和阶数计算。例如 30×30 贴纸、三阶，就是 10×10 共 100 颗魔方。',
     mode: '模式',
     layout: '排版',
     paint: '上色',
@@ -739,6 +760,14 @@ const I18N = {
     themeDark: 'Dark',
     dropTitle: 'Drop images here, or click to choose',
     dropHint: 'Multiple files OK. Processed only on this device.',
+    guideSummary: 'How to use',
+    guideLead: 'Turn an image into a wall of Rubik’s cubes and export a numbered blueprint. The image stays on this device and is not uploaded.',
+    guideStep1: 'Drop or choose images. Add more than one, then arrange them under Layout.',
+    guideStep2: 'Pick the cube size and the wall width and height. Cell counts snap to the cube size, and the tool shows how many cubes you need.',
+    guideStep3: 'Open Paint to change individual stickers. Then download a PNG or print the sheet.',
+    guideFaqTitle: 'Questions',
+    guideFaqLocal: 'Nothing is sent to a server. A blueprint you have not downloaded is gone after you reload or close the page.',
+    guideFaqCount: 'The count follows the current size and cube order. A 30×30 sticker wall of 3×3 cubes is 10×10, or 100 cubes.',
     mode: 'Mode',
     layout: 'Layout',
     paint: 'Paint',
@@ -839,11 +868,6 @@ function seoPack() {
   return window.__CW?.seo?.[lang] ?? window.__CW?.seo?.zh ?? { title: t('title'), metaTitle: t('title'), metaDescription: '', metaKeywords: '', ogImageAlt: t('title') };
 }
 
-function pageAbsUrl(l = lang) {
-  const site = window.__CW?.site || 'https://cube.ryanstarfox.top';
-  return l === 'en' ? site + '/?lang=en' : site + '/';
-}
-
 function syncLangUrl() {
   const url = new URL(location.href);
   if (lang === 'en') url.searchParams.set('lang', 'en');
@@ -858,9 +882,14 @@ function setMeta(selector, value) {
   if (el) el.setAttribute('content', value);
 }
 
+function canonicalUrl() {
+  const site = window.__CW?.site || 'https://cube.ryanstarfox.top';
+  return String(site).replace(/\/+$/, '') + '/';
+}
+
 function applySeo() {
   const pack = seoPack();
-  const url = pageAbsUrl();
+  const url = canonicalUrl();
   document.title = pack.metaTitle;
   setMeta('meta[name="description"]', pack.metaDescription);
   setMeta('meta[name="keywords"]', pack.metaKeywords);
